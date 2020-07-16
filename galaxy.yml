@@ -1,0 +1,18 @@
+namespace: "klaytndev"
+name: "klaytn-ansible"
+version: "1.0.0"
+readme: "README.md"
+authors:
+  - jayden.hur@groundx.xyz
+  - jeff.kim@groundx.xyz  
+description: "Ansbile collection for building and managing Klaytn blockchain network"
+license:
+  - Apache-2.0
+tags:
+  - blockchain
+  - klaytn
+  - groundx
+repository: https://www.github.com/klaytn/klaytn-ansible
+homepage: https://www.klaytn.com/
+documentation: https://docs.klaytn.com/
+issues: https://github.com/klaytn/klaytn-ansible/issues

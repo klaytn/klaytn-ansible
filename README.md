@@ -15,7 +15,7 @@ Klaytn provides advanced tooling that allows you to quickly build, operate & gov
 ### Role list
 No           |   role name   |  description
 ------------ | ------------- | -------------
- 1           |    [klaytn](roles/klaytn)     |   install / configuration Klaytn packages
+ 1           |    [klaytn_node](roles/klaytn_node)     |   install / configuration Klaytn packages
 
 ## Launch Ansible
 ### Using docker
@@ -26,8 +26,6 @@ You can use provided docker image for Klaytn ansible. The docker image is inside
 &nbsp;&nbsp;&nbsp;`cp /YOUR/KEY/PATH docker/keys/ansible.key`
 
 * **STEP 2:** Lauch docker image using `docker-compose` command.
-
-&nbsp;&nbsp; For the specific menual for further steps, please following [README](klaytn/README.md)
 
 &nbsp;&nbsp;&nbsp;&nbsp;`docker-compose up -d `
 

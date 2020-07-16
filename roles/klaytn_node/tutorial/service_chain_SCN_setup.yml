@@ -2,7 +2,7 @@
   hosts: all
   become: true
   roles:
-    - role: klaytn
+    - role: klaytn_node
       main_chiandata_fastsync : "no"
       service_chain_genesis_generatation : "yes"
       service_chain_key_generation: "yes"

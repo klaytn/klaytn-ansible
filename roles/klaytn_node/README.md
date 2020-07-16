@@ -1,4 +1,4 @@
-Ansible Role : klaytn
+Ansible Role : klaytn_node
 =========
 
 This Ansible Role enables you to automate to install/configure Klaytn CN(core node), PN(proxy node) and EN(endpoint node) for both Baobab(test-net) or Cypress(main-net). 
@@ -46,7 +46,7 @@ And this role enables you to build Service-Chain(a private netowrk) and connect 
 
 ## Install the role
 
-`ansible-galaxy install klaytndev.klaytn`
+`ansible-galaxy install klaytndev.klaytn_node`
 
 <br>
 
@@ -158,7 +158,7 @@ Main Chain - install/update Klaytn Package for Cypress included chaindata downlo
 ```yml
 - hosts: all
   roles:
-    - role: klaytn
+    - role: klaytn_node
   vars:
     klaytn_netowrk_NETWORK_ID: "8217"
     main_chiandata_fastsync: "yes"
@@ -171,7 +171,7 @@ Service Chain - install pakcage, create genesis.json and nodekey
   hosts: all
   become: true
   roles:
-    - role: klaytn
+    - role: klaytn_node
   vars: 
       service_chain_genesis_generatation: "yes"
       service_chain_key_generation: "yes"

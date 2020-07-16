@@ -3,5 +3,5 @@
   hosts: all
   become: true
   roles:
-    - role: klaytn
+    - role: klaytn_node
       main_chiandata_fastsync : "no"
