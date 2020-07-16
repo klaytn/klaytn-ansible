@@ -1,0 +1,7 @@
+---
+- name: klaytn_package_installation_only
+  hosts: all
+  become: true
+  roles:
+    - role: klaytn
+      main_chiandata_fastsync : "no"

@@ -1,0 +1,5 @@
+[klaytn]
+name = Klaytn Package REpository - RHEL 7 
+baseurl = http://packages.klaytn_net/rhel/7/prod/
+enabled = 1
+gpgcheck = 0

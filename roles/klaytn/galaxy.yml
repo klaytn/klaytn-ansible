@@ -1,0 +1,20 @@
+namespace: "klaytn"
+name: "klaytn"
+version: "1.0.0"
+readme: "README.md"
+authors:
+  - jayden.hur@groundx.xyz
+  - jeff.kim@groundx.xyz  
+description: "Klaytn BlockChain Node Management"
+license:
+  - "MIT"
+tags:
+  - blockchain
+  - klaytn
+  - klay
+  - groundx
+  - ansible
+repository: "https://www.github.com/klaytn/klaytn-ansible"
+homepage: "https://www.klaytn.com/"
+documentation: "https://docs.klaytn.com/"
+issues: "https://github.com/klaytn/klaytn-ansible/issues"

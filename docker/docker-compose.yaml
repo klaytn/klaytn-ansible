@@ -1,0 +1,15 @@
+# Copyright GroundX Co., Ltd. 2020 All Rights Reserved.
+version: '3'
+
+services:
+  klaytn-ansible:
+    container_name: klaytn-ansible
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    tty: true
+    working_dir: /etc/roles
+    command: /bin/bash
+    volumes:
+      - ./../roles:/etc/roles
+      - ./keys/ansible.key:/etc/certs/ansible.key

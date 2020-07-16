@@ -1,0 +1,23 @@
+---
+# description: Download Chaindata from LumberJack 
+- name: Create a directory if it does not exist
+  file:
+    path: "{{klaytn_node_DATA_DIR}}"
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Download the latest chaindata from packages.klaytn_net
+  get_url:
+    url: "https://s3.ap-northeast-2.amazonaws.com/klaytn-chaindata/{{klaytn_network_NETWORK}}/klaytn-{{klaytn_network_NETWORK}}-chaindata-20200625010611.tar.gz"
+    dest: "{{klaytn_node_DATA_DIR}}/klaytn-{{klaytn_network_NETWORK}}-chaindata-latest.tar.gz"
+  become: yes 
+
+- name: Unarchive 
+  unarchive:
+    src: "{{klaytn_node_DATA_DIR}}/klaytn-{{klaytn_network_NETWORK}}-chaindata-latest.tar.gz"
+    dest: "{{klaytn_node_DATA_DIR}}"
+    remote_src: yes
+  become: yes
+
+

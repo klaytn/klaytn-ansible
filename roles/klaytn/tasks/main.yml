@@ -1,0 +1,99 @@
+---
+# tasks file for klaytn package installation
+- name: "kcnd - define Klaytn service"
+  set_fact:
+    klaytn_service_type: kcnd
+    remoteNode: "yes"
+  when: inventory_hostname.find('CN') != -1
+
+- name: "kpnd - define Klaytn service"
+  set_fact:
+    klaytn_service_type : kpnd
+    remoteNode: "yes"
+  when: inventory_hostname.find('PN') != -1
+
+- name: "kend - define Klaytn service"
+  set_fact:
+    klaytn_service_type : kend
+    remoteNode: "yes"
+  when: inventory_hostname.find('EN') != -1
+
+- name: "builder - define launch homi"
+  set_fact:
+    remoteNode: "no"
+    isServiceChain: "yes"
+  when: inventory_hostname.find('builder') != -1
+
+- name: "kscnd - define Klaytn service"
+  set_fact:
+    klaytn_service_type: kscnd
+    isServiceChain: "yes"
+    remoteNode: "yes"
+  when: inventory_hostname.find('SCN') != -1
+
+- name: "kspnd - define Klaytn service"
+  set_fact:
+     klaytn_service_type : kspnd
+     isServiceChain: "yes"
+     remoteNode: "yes"
+  when: inventory_hostname.find('SPN') != -1
+
+- name: "ksend - define Klaytn service"
+  set_fact:
+     klaytn_service_type : ksend
+     isServiceChain: "yes"
+     remoteNode: "yes"
+  when: inventory_hostname.find('SEN') != -1
+
+- name: "Set Ansible values"
+  set_fact:
+    klaytn_node_GENESIS_DIR: "/var/{{ klaytn_service_type }}/genesis"
+    klaytn_node_DATA_DIR: "/var/{{ klaytn_service_type }}/data"
+    klaytn_node_LOG_DIR: "/var/{{ klaytn_service_type }}/log"
+    klaytn_node_KEY_PATH: "{{ klaytn_node_DATA_DIR }}/log"
+
+# (For Klaytn ServiceChain) Klaytn Tool installation & Generate gensis.json and nodekey
+- name: "KLAYTN HOMI TOOL"
+  include_tasks: "download_homi_tool.yml"
+  tags: "sethomi"
+  when:
+    - service_chain_genesis_generatation|bool
+    - service_chain_key_generation|bool
+    - launchHomi|bool
+    - isServiceChain|bool
+
+# Klaytn Service chain init file transfer
+- name: "Service Chain Material Transfer"
+  include_tasks: "cp_genesis_files.yml"
+  when:
+    - service_chain_genesis_generatation|bool
+    - service_chain_key_generation|bool
+    - remoteNode|bool
+    - isServiceChain|bool
+
+# Klaytn Package Installation
+- name: "Klaytn Package Install"
+  include_tasks: "installation.yml"
+  when:
+    - ansible_os_family != "Windows"
+    - remoteNode|bool
+
+# Klaytn Node Initialization
+- name: "Klaytn Node Initialization"
+  include_tasks: 'initialization.yml'
+  when:
+    - remoteNode|bool
+
+# (For Klaytn MainChain) Download ChainData of Cypres or Baobab
+- name : "Download Chain Data"
+  include_tasks: "download_chaindata.yml"
+  when :
+    - main_chiandata_fastsync|bool
+    - not isServiceChain|bool
+
+# Klaytn Package Configuration
+- name: "Configure Klaytn"
+  include_tasks: "configure.yml"
+  when:
+    - ansible_os_family != "Windows"
+    - remoteNode|bool

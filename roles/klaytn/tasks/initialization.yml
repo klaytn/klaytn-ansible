@@ -1,0 +1,21 @@
+---
+- name: "Initialzation - Make genesis file dir"
+  file:
+    path: "{{ klaytn_node_GENESIS_DIR }}"
+    state: "directory"
+  become: yes
+  when:
+    - not isServiceChain|bool
+
+- name: "Initialzation - Download Genesis File"
+  get_url:
+    url: http://packages.klaytn.net/{{ klaytn_network_NETWORK }}/genesis.json
+    dest: "{{ klaytn_node_GENESIS_DIR }}/genesis.json"
+  become: yes
+  when:
+    - not isServiceChain|bool
+
+- name: "Initialzation - Genensis "
+  shell:
+    cmd: "{{ klaytn_service_type | regex_replace ('d') }} init --datadir {{ klaytn_node_DATA_DIR }} {{ klaytn_node_GENESIS_DIR }}/genesis.json"
+  become: yes

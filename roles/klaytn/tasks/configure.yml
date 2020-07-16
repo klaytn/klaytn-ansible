@@ -1,0 +1,16 @@
+---
+# description: Klaytn Configuration
+- name: "Make configuration directory"
+  file:
+    path: "/etc/{{ klaytn_service_type }}/conf"
+    state: "directory"
+  become: yes
+
+- name: "Klaytn Configuration"
+  template:
+    src: "{{ klaytn_service_type }}.conf.j2"
+    dest: "/etc/{{ klaytn_service_type }}/conf/{{ klaytn_service_type }}.conf"
+  notify:
+    - restart klaytn
+  become: yes
+

@@ -1,0 +1,9 @@
+- name: Service_Chain_SCN_SETUP
+  hosts: all
+  become: true
+  roles:
+    - role: klaytn
+      main_chiandata_fastsync : "no"
+      service_chain_genesis_generatation : "yes"
+      service_chain_key_generation: "yes"
+      launchHomi: "yes"

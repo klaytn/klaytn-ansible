@@ -1,0 +1,144 @@
+---
+################### KLAYTN ANSIBLE VARILABLES ##################################################
+    # vars file for klaytn
+main_chiandata_fastsync : 0
+remoteNode: "yes"
+
+# Service chain conditional values
+service_chain_genesis_generatation: "no"
+service_chain_key_generation: "no"
+isServiceChain: "no"
+launchHomi: "no"
+serivce_chain_port : "50505"
+
+homi_root: "/etc/playbooks/service_chain"
+
+
+################### KLAYTN CONFIGURATION VARIABLES ##################################################
+
+#Klaytn Package Available in https://docs.klaytn_com/node/download
+klaytn_package_state: present
+
+klaytn_homi:
+    version: v1.5.0  ## NO latest
+
+# defaults for Klaytn Package  -- use klaytn configuration file - https://docs.klaytn_com/node/endpoint-node/operation-guide/configuration#properties
+# Network name that this node will join.  This value is used when NETWORK_ID is not defined.  ("cypress", "baobab")
+klaytn_network_NETWORK: "Baobab"
+
+# Klaytn network ID.  If you create a local private network, you will define the network ID for your own.  Following IDs are reserved for pre-configured networks. 8217 : Cypress (Main network) 1001 : Baobab (test network)
+klaytn_netowrk_NETWORK_ID: ""
+
+# P2P port
+klaytn_network_PORT: 32323
+
+# JSON RPC server type.  ("http", "fasthttp")
+klaytn_network_SERVER_TYPE: "fasthttp"
+
+# Blockchain sync mode.  ("fast", "full")
+klaytn_network_SYNCMODE: "full"
+
+# Logging verbosity.  (0=silent, 1=error, 2=warn, 3=info, 4=debug, 5=detail)
+klaytn_network_LOG_VERBOSITY: 3
+klaytn_network_pn.LOG_VERBOSITY: 3
+
+# Maximum number of physical connections.  All single-channel peers can have up to MAXCONNECTIONS peers.  All multi-channel peers can have up to MAXCONNECTIONS/2 peers.  Network connection is disabled if it is set to 0.
+klaytn_network_MAXCONNECTIONS: 100
+
+# Size of in-memory cache in LevelDB (MiB).
+klaytn_network_LDBCACHESIZE : 10240
+
+#### TXPOOL OPTION SETTING ####
+# Maximum number of executable transaction slots for all accounts.
+klaytn_network_TXPOOL_EXEC_SLOTS_ALL: 16384
+
+# Maximum number of non-executable transaction slots for all accounts.
+klaytn_network_TXPOOL_NONEXEC_SLOTS_ALL: 16384
+
+# Number of executable transaction slots guaranteed per account.
+klaytn_network_TXPOOL_EXEC_SLOTS_ACCOUNT: 16384
+
+# Maximum number of non-executable transaction slots guaranteed per account.
+klaytn_network_TXPOOL_NONEXEC_SLOTS_ACCOUNT: 16384
+
+# Maximum amount of time non-executable transactions is queued.
+klaytn_network_TXPOOL_LIFE_TIME: "5m"
+
+
+#### RPC OPTION SETTING #####
+# Enable the HTTP-RPC server if it is set to 1.
+klaytn_network_RPC_ENABLE: 0
+
+# Comma-separated list of APIs offered over the HTTP-RPC interface.  (admin, debug, klay, miner, net, personal, rpc, txpool, web3)
+klaytn_network_RPC_API: "klay,admin"
+
+# HTTP-RPC server listening port
+klaytn_network_RPC_PORT: 80
+
+# HTTP-RPC server listening interface.
+klaytn_network_RPC_ADDR: "0.0.0.0"
+
+# Comma-separated list of domains from which to accept cross-origin requests (browser enforced)
+klaytn_network_RPC_CORSDOMAIN: "*"
+
+# Comma-separated list of virtual hostnames from which to accept requests (server enforced). Accepts '*' wildcard.
+klaytn_network_RPC_VHOSTS: "*"
+
+
+#### WS OPTION SETTING ####
+# Enable the WS-RPC server if it is set to 1
+klaytn_network_WS_ENABLE: 0
+
+# APIs offered over the WS-RPC interface.  (admin, debug, klay, miner, net, personal, rpc, txpool, web3)
+klaytn_network_WS_API: "klay"
+
+# WS-RPC server listening interface.
+klaytn_network_WS_ADDR: "0.0.0.0"
+
+# WS-RPC server listening port
+klaytn_network_WS_PORT: 8552
+
+# Origins from which to accept websockets requests.
+klaytn_network_WS_ORIGINS: "*"
+
+# Enable auto retart if it is set to 1
+klaytn_network_AUTO_RESTART: 1
+
+# Enable metrics collection and reporting if it is set to 1
+klaytn_network_METRICS: 1
+
+# Enable prometheus exporter if it is set to 1
+klaytn_network_PROMETHEUS: 1
+
+# Disable parallel writes of block data to persistent database if it is set to 1
+klaytn_network_DB_NO_PARALLEL_WRITE: 0
+
+# Create a dedicated channel for block propagation if it is set to 1
+klaytn_network_MULTICHANNEL: 1
+
+# Listening sub port number if multichannel option is enabled.
+klaytn_network_SUBPORT: $((PORT + 1))
+
+# Turn off the discovery option if it is set to 1
+klaytn_network_NO_DISCOVER: 1
+# Comma-separated kni addresses of bootstrap nodes.
+klaytn_network_BOOTNODES: ""
+
+# For additional command-line options. e.g) --txpool.nolocals
+klaytn_network_ADDITIONAL: ""
+
+# Klaytn blockchain genesis folder path
+klaytn_node_GENESIS_DIR: "/var/kcnd/genesis" 
+
+# Klaytn blockchain data folder path
+klaytn_node_DATA_DIR: "/var/kcnd/data"
+
+# Log folder path
+klaytn_node_LOG_DIR: "/var/kcnd/log"
+
+# NodeKey path for Bootnode
+klaytn_node_KEY_PATH: "{{klaytn_node_DATA_DIR}}/nodekey"
+
+# REWARDS ADDRESS - CN ONLY
+klaytn_node_REWARDBASE: ""
+

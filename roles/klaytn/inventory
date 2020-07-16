@@ -1,0 +1,39 @@
+#########################################
+#  Klaytn Service Chain                 #
+#########################################
+
+[ServiceChainCN]
+# SCN01         ansible_host=10.11.12.13  ansible_user=MY_USER
+# SCN02       ansible_host=1.2.3.4      ansible_user=MY_USER
+
+[ServiceChainPN]
+# SPN01
+# SPN02
+
+[ServiceChainEN]
+# SEN02
+
+###########################################
+#  Klaytn Main Chain - Cypress or Baobab  #
+###########################################
+
+[CypressCN]
+# CN01        ansible_host=127.0.0.1      ansible_user=manager
+# CN02        ansible_host=127.0.0.2      ansible_ssh_private_key_file=/home/example/.ssh/aws.pem
+
+[CypressPN]
+# PN01
+# PN02
+
+[CypressEN]
+# EN01
+
+
+###########################################
+#  Klaytn Tool                            #
+###########################################
+
+# host where run homi tool
+[controller]
+builder       ansible_host=localhost      ansible_connection=local
+

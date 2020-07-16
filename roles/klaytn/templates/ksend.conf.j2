@@ -1,0 +1,59 @@
+# Configuration - Klaytn Package service  
+
+# cypress, baobab is only available if you don't specify NETWORK_ID.
+NETWORK={{klaytn_network_NETWORK}}
+
+# if you specify NETWORK_ID, a private network is created.
+NETWORK_ID={{klaytn_network_NETWORK}}
+
+PORT={{klaytn_network_PORT}}
+
+SERVER_TYPE={{klaytn_network_SERVER_TYPE}}
+SYNCMODE={{klaytn_network_SYNCMODE}} 
+VERBOSITY={{klaytn_network_LOG_VERBOSITY}}
+MAXCONNECTIONS={{klaytn_network_MAXCONNECTIONS}}
+
+REWARDBASE={{klaytn_node_REWARDBASE}}
+
+# LDBCACHESIZE={{klaytn_network_LDBCACHESIZE}}
+
+# txpool options setting
+TXPOOL_EXEC_SLOTS_ALL={{klaytn_network_TXPOOL_EXEC_SLOTS_ALL}}
+TXPOOL_NONEXEC_SLOTS_ALL={{klaytn_network_TXPOOL_NONEXEC_SLOTS_ALL}}
+TXPOOL_EXEC_SLOTS_ACCOUNT={{klaytn_network_TXPOOL_EXEC_SLOTS_ACCOUNT}}
+TXPOOL_NONEXEC_SLOTS_ACCOUNT={{klaytn_network_TXPOOL_NONEXEC_SLOTS_ACCOUNT}}
+TXPOOL_LIFE_TIME={{klayt.network_TXPOOL_LIFE_TIME}}
+
+# rpc options setting
+RPC_ENABLE={{klaytn_network_RPC_ENABLE}} # if this is set, the following options will be used
+RPC_API={{klaytn_network_RPC_API}} # available apis: admin,debug,klay,miner,net,personal,rpc,txpool,web3
+RPC_PORT={{klaytn_network_RPC_PORT}}
+RPC_ADDR={{klaytn_network_RPC_ADDR}}
+RPC_CORSDOMAIN={{klaytn_network_RPC_CORSDOMAIN}}
+RPC_VHOSTS={{klaytn_network_RPC_VHOSTS}}
+
+# ws options setting
+WS_ENABLE={{klaytn_network_WS_ENABLE}} # if this is set, the following options will be used
+WS_API={{klaytn_network_WS_API}} # available apis: admin,debug,klay,miner,net,personal,rpc,txpool,web3
+WS_ADDR={{klaytn_network_WS_ADDR}}
+WS_PORT={{klaytn_network_WS_PORT}}
+WS_ORIGINS={{klaytn_network_WS_ORIGINS}}
+
+# Setting 1 is to enable options, otherwise disabled.
+AUTO_RESTART={{klaytn_network_AUTO_RESTART}}
+METRICS={{klaytn_network_METRICS}}
+PROMETHEUS={{klaytn_network_PROMETHEUS}}
+DB_NO_PARALLEL_WRITE={{klaytn_network_DB_NO_PARALLEL_WRITE}}
+MULTICHANNEL={{klaytn_network_MULTICHANNEL}}
+SUBPORT={{klaytn_network_SUBPORT}} # used for multi channel option
+
+# discover options
+NO_DISCOVER={{klaytn_network_NO_DISCOVER}} # setting 1 to disable discovery
+BOOTNODES={{klaytn_network_BOOTNODES}}
+
+# Raw options e.g) "--txpool.nolocals"
+ADDITIONAL={{klaytn_network_ADDITIONAL}}
+
+DATA_DIR={{klaytn_node_DATA_DIR}}
+LOG_DIR={{klaytn_node_LOG_DIR}}
+BOOTNODES={{klaytn_network_BOOTNODES}}

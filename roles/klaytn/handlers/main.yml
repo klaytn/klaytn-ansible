@@ -1,0 +1,8 @@
+# handlers file 
+- name: restart klaytn
+  systemd:
+    name: "{{ klaytn_service_type }}" 
+    state: restarted
+    enabled: yes
+  become: yes
+    
