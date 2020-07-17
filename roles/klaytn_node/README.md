@@ -44,9 +44,9 @@ And this role enables you to build Service-Chain(a private netowrk) and connect 
 
 <br>
 
-## Install the role
+## Install the collection
 
-`ansible-galaxy install klaytndev.klaytn_node`
+`ansible-galaxy collection install klaytndev.klaytn_ansible`
 
 <br>
 

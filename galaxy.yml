@@ -1,6 +1,6 @@
 namespace: "klaytndev"
-name: "klaytn-ansible"
-version: "1.0.0"
+name: "klaytn_ansible"
+version: "1.0.2"
 readme: "README.md"
 authors:
   - jayden.hur@groundx.xyz
@@ -15,4 +15,5 @@ tags:
 repository: https://www.github.com/klaytn/klaytn-ansible
 homepage: https://www.klaytn.com/
 documentation: https://docs.klaytn.com/
+blog: https://medium.com/klaytn 
 issues: https://github.com/klaytn/klaytn-ansible/issues
