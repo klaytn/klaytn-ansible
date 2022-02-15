@@ -27,7 +27,7 @@ klaytn_homi:
 klaytn_network_NETWORK: "Baobab"
 
 # Klaytn network ID.  If you create a local private network, you will define the network ID for your own.  Following IDs are reserved for pre-configured networks. 8217 : Cypress (Main network) 1001 : Baobab (test network)
-klaytn_netowrk_NETWORK_ID: ""
+klaytn_network_NETWORK_ID: ""
 
 # P2P port
 klaytn_network_PORT: 32323
