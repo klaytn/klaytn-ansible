@@ -50,7 +50,7 @@
     klaytn_node_GENESIS_DIR: "/var/{{ klaytn_service_type }}/genesis"
     klaytn_node_DATA_DIR: "/var/{{ klaytn_service_type }}/data"
     klaytn_node_LOG_DIR: "/var/{{ klaytn_service_type }}/log"
-    klaytn_node_KEY_DIR: "{{ klaytn_node_DATA_DIR }}/klay"
+    klaytn_node_KEY_DIR: "/var/{{ klaytn_service_type }}/data/klay"
   when:
     - remoteNode|bool
 
