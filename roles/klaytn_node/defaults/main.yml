@@ -137,8 +137,8 @@ klaytn_node_DATA_DIR: "/var/kcnd/data"
 # Log folder path
 klaytn_node_LOG_DIR: "/var/kcnd/log"
 
-# NodeKey path for Bootnode
-klaytn_node_KEY_PATH: "{{klaytn_node_DATA_DIR}}/nodekey"
+# NodeKey foler path
+klaytn_node_KEY_DIR: "{{klaytn_node_DATA_DIR}}/klay"
 
 # REWARDS ADDRESS - CN ONLY
 klaytn_node_REWARDBASE: ""

@@ -15,7 +15,7 @@
 - name: Copy key file to scn
   copy:
     src: "{{ homi_root }}/files/homi/output/keys/nodekey_{{ inventory_hostname }}"
-    dest: "{{ klaytn_node_GENESIS_DIR }}/"
+    dest: "{{ klaytn_node_KEY_DIR }}/nodekey"
 
 - name: Copy validator file to scn
   copy:
