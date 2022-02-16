@@ -11,7 +11,7 @@
 
 - name: "Installation - Install Klaytn Package "
   yum:
-    name: '{{ klaytn_service_type }}'          
+    name: '{{ klaytn_service_type }}'
     state: latest
   register: is_klaytn_package_installed
   until: is_klaytn_package_installed is succeeded
@@ -20,7 +20,7 @@
 
 - name: "Installation - Download Klaytn Package"
   get_url:
-    url: "https://packages.klaytn_net/klaytn/{{ klaytn_homi.version }}/{{ klaytn_service_type | regex_replace ('d') }}-{{ klaytn_homi.version }}-0-linux-amd64.tar.gz"
+    url: "https://packages.klaytn.net/klaytn/{{ klaytn_homi.version }}/{{ klaytn_service_type | regex_replace ('d') }}-{{ klaytn_homi.version }}-0-linux-amd64.tar.gz"
     dest: "{{ klaytn_node_DATA_DIR }}/{{ klaytn_service_type }}.tar.gz"
     mode: "0755"
   become: yes
