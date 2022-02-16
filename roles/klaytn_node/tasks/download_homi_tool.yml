@@ -53,7 +53,8 @@
 
 - name: Klaytn Homi Tool - Export kni address from static nodes json variable
   set_fact:
-    static_nodes_knis: "{{ static_nodes_knis + [ item['NodeInfo']] }}"
+    # Add p2p port after IP address in each KNIs
+    static_nodes_knis: "{{ static_nodes_knis + [ ( item['NodeInfo'] | replace('?', ':32323?') ) ] }}"
   with_items: "{{ static_nodes_json }}"
 
 - name: Klaytn Homi Tool - Generate static-nodes.json
