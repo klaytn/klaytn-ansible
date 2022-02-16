@@ -15,7 +15,14 @@
   when:
     - not isServiceChain|bool
 
-- name: "Initialzation - Genensis "
+- name: "Initialzation - Genensis"
   shell:
     cmd: "{{ klaytn_service_type | regex_replace ('d') }} init --datadir {{ klaytn_node_DATA_DIR }} {{ klaytn_node_GENESIS_DIR }}/genesis.json"
   become: yes
+  when: ansible_facts['pkg_mgr'] == 'yum'
+
+- name: "Initialzation - Genensis"
+  shell:
+    cmd: "/opt/{{ klaytn_service_type }}/bin/{{ klaytn_service_type | regex_replace ('d') }} init --datadir {{ klaytn_node_DATA_DIR }} {{ klaytn_node_GENESIS_DIR }}/genesis.json"
+  become: yes
+  when: ansible_facts['pkg_mgr'] != 'yum'

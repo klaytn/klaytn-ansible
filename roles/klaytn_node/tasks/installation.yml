@@ -49,8 +49,10 @@
     remote_src: yes
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
+    mode: 0755
   become: yes
   with_items:
-    - { "src": "{{ klaytn_node_DATA_DIR }}/{{ klaytn_service_type | regex_replace ('d') }}-linux-amd64/bin/{{ klaytn_service_type | regex_replace ('d') }}", "dest": "/opt/{{ klaytn_service_type | regex_replace ('d') }}/bin" }
-    - { "src": "{{ klaytn_node_DATA_DIR }}{{ klaytn_service_type | regex_replace ('d') }}-linux-amd64/conf/{{ klaytn_service_type }}.conf", "dest": "/opt/{{ klaytn_service_type }}/conf/{{ klaytn_service_type }}.conf" }
+    - { "src": "{{ klaytn_node_DATA_DIR }}/{{ klaytn_service_type | regex_replace ('d') }}-linux-amd64/bin/{{ klaytn_service_type }}", "dest": "/opt/{{ klaytn_service_type }}/bin" }
+    - { "src": "{{ klaytn_node_DATA_DIR }}/{{ klaytn_service_type | regex_replace ('d') }}-linux-amd64/bin/{{ klaytn_service_type | regex_replace ('d') }}", "dest": "/opt/{{ klaytn_service_type }}/bin" }
+    - { "src": "{{ klaytn_node_DATA_DIR }}/{{ klaytn_service_type | regex_replace ('d') }}-linux-amd64/conf/{{ klaytn_service_type }}.conf", "dest": "/opt/{{ klaytn_service_type }}/conf/{{ klaytn_service_type }}.conf" }
   when: ansible_facts['pkg_mgr'] != 'yum'
