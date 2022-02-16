@@ -24,8 +24,10 @@ No           |   role name   |  description
 First, update inventory.
 
 ```
+[ServiceChainCN]
 SCN1 ansible_user=MY_USER ansible_host=1.2.3.4
 
+[controller]
 builder ansible_host=localhost ansible_connecion=local ansible_user=YOUR_USER
 ```
 Also, update Klaytn version to the latest one.
