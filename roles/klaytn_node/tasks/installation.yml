@@ -35,21 +35,22 @@
   register: extract_result
   when: ansible_facts['pkg_mgr'] != 'yum'
 
-- name: "Installation - Make Config Directory if not exists"
+- name: "Installation - Make Klaytn Directory if not exists"
   file:
-    path: "/etc/{{ klaytn_service_type }}/conf"
+    path: "/opt/{{ klaytn_service_type }}/{{ item }}"
     state: "directory"
   become: yes
   when: ansible_facts['pkg_mgr'] != 'yum'
+  with_items:
+    ["bin", "conf"]
 
 - name: "Installation - Move Unarchived Files into Proper Path"
-  copy: 
+  copy:
+    remote_src: yes
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-  become: yes 
-  with_items: 
-    - { "src": "{{ klaytn_service_type | regex_replace ('d') }}-linux-amd64/bin/{{ klaytn_service_type | regex_replace ('d') }}", "dest": "/usr/bin/{{ klaytn_service_type | regex_replace ('d') }}" }
-    - { "src": "{{ klaytn_service_type | regex_replace ('d') }}-linux-amd64/conf/{{ klaytn_service_type }}.conf", "dest": "/etc/{{ klaytn_service_type }}/conf/{{ klaytn_service_type }}.conf" }
+  become: yes
+  with_items:
+    - { "src": "{{ klaytn_node_DATA_DIR }}/{{ klaytn_service_type | regex_replace ('d') }}-linux-amd64/bin/{{ klaytn_service_type | regex_replace ('d') }}", "dest": "/opt/{{ klaytn_service_type | regex_replace ('d') }}/bin" }
+    - { "src": "{{ klaytn_node_DATA_DIR }}{{ klaytn_service_type | regex_replace ('d') }}-linux-amd64/conf/{{ klaytn_service_type }}.conf", "dest": "/opt/{{ klaytn_service_type }}/conf/{{ klaytn_service_type }}.conf" }
   when: ansible_facts['pkg_mgr'] != 'yum'
-
-  
