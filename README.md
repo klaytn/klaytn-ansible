@@ -21,11 +21,13 @@ No           |   role name   |  description
 
 ## Launch Ansible
 ### Preparation
-First, update inventory.
+First, update inventory. The ansible hostvar `ansible_host` is used
+for SSH connection to the target VM (should be public IP), and `klaytn_p2p_host` is used for
+P2P connections between machines (may be private IP).
 
 ```
 [ServiceChainCN]
-SCN1 ansible_user=MY_USER ansible_host=1.2.3.4
+SCN1 ansible_user=MY_USER ansible_host=1.2.3.4 klaytn_p2p_host=10.1.2.3
 
 [controller]
 builder ansible_host=localhost ansible_connecion=local ansible_user=YOUR_USER

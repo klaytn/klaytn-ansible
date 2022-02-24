@@ -3,8 +3,8 @@
 #########################################
 
 [ServiceChainCN]
-# SCN01         ansible_host=10.11.12.13  ansible_user=MY_USER
-# SCN02       ansible_host=1.2.3.4      ansible_user=MY_USER
+# SCN01 ansible_host=10.11.12.13 klaytn_p2p_host=10.1.0.8 ansible_user=MY_USER
+# SCN02 ansible_host=1.2.3.4     klaytn_p2p_host=10.1.0.9 ansible_user=MY_USER
 
 [ServiceChainPN]
 # SPN01

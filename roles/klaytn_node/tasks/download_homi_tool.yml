@@ -39,7 +39,7 @@
   replace:
     path: "{{ homi_root }}/files/homi/output/keys/validator{{ cn_idx +1 }}"
     regexp: "(@[0-9]\\.[0-9]\\.[0-9]\\.[0-9]\\:\\d{1,5}\\?)"
-    replace: "@{{ hostvars[item]['ansible_host'] }}?"
+    replace: "@{{ hostvars[item]['klaytn_p2p_host'] }}?"
   loop: "{{ groups['ServiceChainCN'] }}"
   loop_control:
     index_var: cn_idx
