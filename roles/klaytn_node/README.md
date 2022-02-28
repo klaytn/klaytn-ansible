@@ -3,7 +3,7 @@ Ansible Role : klaytn_node
 
 This Ansible Role enables you to automate to install/configure Klaytn CN(core node), PN(proxy node) and EN(endpoint node) for both Baobab(test-net) or Cypress(main-net). 
 
-And this role enables you to build Service-Chain(a private netowrk) and connect to Main-Chain of Klaytn easily. We also provide Terraform moddule to provision the infrastructure in AWS and Azure. Here is the link of [Klaytn Terraform Repo](https://github.com/klaytn/klaytn-terraform) 
+And this role enables you to build Service-Chain(a private network) and connect to Main-Chain of Klaytn easily. We also provide Terraform moddule to provision the infrastructure in AWS and Azure. Here is the link of [Klaytn Terraform Repo](https://github.com/klaytn/klaytn-terraform)
 
 <br>
 
@@ -160,7 +160,7 @@ Main Chain - install/update Klaytn Package for Cypress included chaindata downlo
   roles:
     - role: klaytn_node
   vars:
-    klaytn_netowrk_NETWORK_ID: "8217"
+    klaytn_network_NETWORK_ID: "8217"
     main_chiandata_fastsync: "yes"
 ```
 

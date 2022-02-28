@@ -19,15 +19,16 @@ homi_root: "/etc/playbooks/service_chain"
 #Klaytn Package Available in https://docs.klaytn_com/node/download
 klaytn_package_state: present
 
+## NOTE Update to latest version
 klaytn_homi:
-    version: v1.5.0  ## NO latest
+    version: v1.7.3
 
 # defaults for Klaytn Package  -- use klaytn configuration file - https://docs.klaytn_com/node/endpoint-node/operation-guide/configuration#properties
 # Network name that this node will join.  This value is used when NETWORK_ID is not defined.  ("cypress", "baobab")
 klaytn_network_NETWORK: "Baobab"
 
 # Klaytn network ID.  If you create a local private network, you will define the network ID for your own.  Following IDs are reserved for pre-configured networks. 8217 : Cypress (Main network) 1001 : Baobab (test network)
-klaytn_netowrk_NETWORK_ID: ""
+klaytn_network_NETWORK_ID: ""
 
 # P2P port
 klaytn_network_PORT: 32323
@@ -128,7 +129,7 @@ klaytn_network_BOOTNODES: ""
 klaytn_network_ADDITIONAL: ""
 
 # Klaytn blockchain genesis folder path
-klaytn_node_GENESIS_DIR: "/var/kcnd/genesis" 
+klaytn_node_GENESIS_DIR: "/var/kcnd/genesis"
 
 # Klaytn blockchain data folder path
 klaytn_node_DATA_DIR: "/var/kcnd/data"
@@ -136,8 +137,8 @@ klaytn_node_DATA_DIR: "/var/kcnd/data"
 # Log folder path
 klaytn_node_LOG_DIR: "/var/kcnd/log"
 
-# NodeKey path for Bootnode
-klaytn_node_KEY_PATH: "{{klaytn_node_DATA_DIR}}/nodekey"
+# NodeKey folder path
+klaytn_node_KEY_DIR: "{{klaytn_node_DATA_DIR}}/klay"
 
 # REWARDS ADDRESS - CN ONLY
 klaytn_node_REWARDBASE: ""

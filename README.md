@@ -1,5 +1,5 @@
 
-# Ansible : klaytn_ansible collection 
+# Ansible : klaytn_ansible collection
 
 ## Description
 
@@ -9,7 +9,7 @@ Klaytn provides advanced tooling that allows you to quickly build, operate & gov
 
 <br>
 
-### Installation 
+### Installation
 ```
 ansible-galaxy collection install klaytndev.klaytn_ansible
 ```
@@ -20,6 +20,25 @@ No           |   role name   |  description
  1           |    [klaytn_node](https://github.com/klaytn/klaytn-ansible/tree/master/roles/klaytn_node)     |   install / configuration Klaytn packages
 
 ## Launch Ansible
+### Preparation
+First, update inventory.
+
+```
+[ServiceChainCN]
+SCN1 ansible_user=MY_USER ansible_host=1.2.3.4
+
+[controller]
+builder ansible_host=localhost ansible_connecion=local ansible_user=YOUR_USER
+```
+Also, update Klaytn version to the latest one.
+Refer to [Klaytn Download page](https://docs.klaytn.com/node/download)
+for the latest version of Klaytn.
+
+```
+klaytn_homi:
+    version: v1.7.3
+```
+
 ### Using docker
 You can use provided docker image for Klaytn ansible. The docker image is inside of `docker` directory.
 
@@ -53,3 +72,9 @@ awscli                     | latest
 ### Using your local ansible plugins
 
 You are also able to use your own `Ansible`, `Ansible AWX` or `Ansible Towner`
+
+For example,
+```
+$ cp roles/klaytn_node/tutorial/service_chain_SCN_setup.yml .
+$ ansible-playbook -i roles/klaytn_node/inventory service_chain_SCN_setup.yml --ask-become-pass
+```

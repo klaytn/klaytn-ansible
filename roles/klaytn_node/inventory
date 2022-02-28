@@ -35,5 +35,4 @@
 
 # host where run homi tool
 [controller]
-builder       ansible_host=localhost      ansible_connection=local
-
+builder ansible_host=localhost ansible_connection=local ansible_user=YOUR_USER

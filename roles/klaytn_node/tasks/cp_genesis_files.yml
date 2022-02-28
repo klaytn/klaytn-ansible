@@ -1,21 +1,26 @@
 ---
-- name: Generate scn datadir 
+- name: Generate scn directories
   file:
-    path: "{{ klaytn_node_DATA_DIR }}"
+    path: "{{ item }}"
     state: "directory"
+  with_items:
+    ["{{ klaytn_node_DATA_DIR}}", "{{ klaytn_node_GENESIS_DIR }}", "{{ klaytn_node_KEY_DIR }}"]
   become: yes
 
-- name: Copy common files to scn
+- name: Copy genesis file to scn
   copy:
-    src: "{{ homi_root }}/files/homi/output/{{ item }}"
-    dest: "{{ klaytn_node_GENESIS_DIR }}/"
-  with_items: 
-    - [ "static-nodes.json", "scripts/genesis.json" ]
+    src: "{{ homi_root }}/files/homi/output/scripts/genesis.json"
+    dest: "{{ klaytn_node_GENESIS_DIR }}/genesis.json"
+
+- name: Copy static-nodes file to scn
+  copy:
+    src: "{{ homi_root }}/files/homi/output/static-nodes.json"
+    dest: "{{ klaytn_node_DATA_DIR }}/static-nodes.json"
 
 - name: Copy key file to scn
   copy:
     src: "{{ homi_root }}/files/homi/output/keys/nodekey_{{ inventory_hostname }}"
-    dest: "{{ klaytn_node_GENESIS_DIR }}/"
+    dest: "{{ klaytn_node_KEY_DIR }}/nodekey"
 
 - name: Copy validator file to scn
   copy:

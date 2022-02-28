@@ -50,7 +50,9 @@
     klaytn_node_GENESIS_DIR: "/var/{{ klaytn_service_type }}/genesis"
     klaytn_node_DATA_DIR: "/var/{{ klaytn_service_type }}/data"
     klaytn_node_LOG_DIR: "/var/{{ klaytn_service_type }}/log"
-    klaytn_node_KEY_PATH: "{{ klaytn_node_DATA_DIR }}/log"
+    klaytn_node_KEY_DIR: "/var/{{ klaytn_service_type }}/data/klay"
+  when:
+    - remoteNode|bool
 
 # (For Klaytn ServiceChain) Klaytn Tool installation & Generate gensis.json and nodekey
 - name: "KLAYTN HOMI TOOL"
@@ -61,6 +63,7 @@
     - service_chain_key_generation|bool
     - launchHomi|bool
     - isServiceChain|bool
+    - not remoteNode|bool
 
 # Klaytn Service chain init file transfer
 - name: "Service Chain Material Transfer"
