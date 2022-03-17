@@ -1,0 +1,12 @@
+{
+  "parent": {
+    "url": "http://{{ hostvars['PARENT0']['ansible_host'] }}:{{ parent_rpc_port }}",
+    "key": "{{ hostvars['PARENT0']['parent_nodekey'] }}",
+    "operator": {{ hostvars['CHILD0']['parent_operator'] }}
+  },
+  "child": {
+    "url": "http://{{ hostvars['CHILD0']['ansible_host'] }}:{{ child_rpc_port }}",
+    "key": "{{ hostvars['CHILD0']['child_nodekey'] }}",
+    "operator": {{ hostvars['CHILD0']['child_operator'] }}
+  }
+}

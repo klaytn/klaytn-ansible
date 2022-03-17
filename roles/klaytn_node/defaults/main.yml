@@ -74,7 +74,7 @@ klaytn_network_RPC_ENABLE: 0
 klaytn_network_RPC_API: "klay,admin"
 
 # HTTP-RPC server listening port
-klaytn_network_RPC_PORT: 80
+klaytn_network_RPC_PORT: 8551
 
 # HTTP-RPC server listening interface.
 klaytn_network_RPC_ADDR: "0.0.0.0"
