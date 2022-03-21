@@ -1,0 +1,77 @@
+# description: Download/Run Klaytn kgen tool
+- name: Klaytn kgen tool - Create Directory
+  file:
+    path: "{{ homi_root }}/files/kgen"
+    state: directory
+    mode: "0755"
+  become : yes
+  when:
+    - not remoteNode|bool
+  tags: "launchKgen"
+
+- name: Klaytn kgen tool - Download Package
+  get_url:
+    url: "http://packages.klaytn.net/klaytn/{{ klaytn_homi.version }}/kgen-{{klaytn_homi.version }}-0-linux-amd64.tar.gz"
+    dest: "{{ homi_root }}/klaytn-kgen-tool.tar.gz"
+  when:
+    - not remoteNode|bool
+  tags: "launchKgen"
+
+- name: Klaytn kgen tool - Unarchive Package
+  unarchive:
+    src: "{{ homi_root }}/klaytn-kgen-tool.tar.gz"
+    dest: "{{ homi_root }}/files/kgen"
+    list_files: yes
+    keep_newer: yes
+  register: extract_result
+  when:
+    - not remoteNode|bool
+  tags: "launchKgen"
+
+- name: Klaytn kgen tool - Set kgen binary path
+  set_fact:
+    homi_bin: "{{ homi_root }}/files/kgen/{{ extract_result.files[-1] }}"
+  when:
+    - not remoteNode|bool
+  tags: "launchKgen"
+
+- name: Klaytn kgen tool - Launch kgen
+  shell: |
+    {{ homi_bin }} --file && \
+    mv {{ homi_root }}/files/kgen/keys/nodekey {{ homi_root }}/files/kgen/keys/nodekey_{{ item }}
+  args:
+    chdir: "{{ homi_root }}/files/kgen"
+  loop: "{{ groups['CypressEN'] }}"
+  when:
+    - not remoteNode|bool
+  tags: "launchKgen"
+
+- name: Copy nodekey file to EN
+  copy:
+    src: "{{ homi_root }}/files/kgen/keys/nodekey_{{ item }}"
+    dest: "{{ klaytn_node_KEY_DIR }}/nodekey"
+  loop: "{{ groups['CypressEN'] }}"
+  when:
+    - useAMI|bool
+    - remoteNode|bool
+  tags: "launchKgen"
+
+- name: "Restart Klaytn serivce"
+  command: /bin/true
+  notify:
+    - restart klaytn
+  when:
+    - ansible_facts['pkg_mgr'] == 'yum'
+    - useAMI|bool
+    - remoteNode|bool
+  tags: "launchKgen"
+
+- name: "Run Klaytn"
+  # Below command is to run Klaytn in background even after the shell opened by ansible is exited.
+  command: "nohup /opt/{{ klaytn_service_type }}/bin/{{ klaytn_service_type }} start </dev/null >/dev/null 2>&1 &"
+  become: yes
+  when:
+    - ansible_facts['pkg_mgr'] != 'yum'
+    - useAMI|bool
+    - remoteNode|bool
+  tags: "launchKgen"

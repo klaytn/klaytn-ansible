@@ -9,6 +9,7 @@ service_chain_genesis_generatation: "no"
 service_chain_key_generation: "no"
 isServiceChain: "no"
 launchHomi: "no"
+launchKgen: "no"
 serivce_chain_port : "50505"
 
 homi_root: "/etc/playbooks/service_chain"

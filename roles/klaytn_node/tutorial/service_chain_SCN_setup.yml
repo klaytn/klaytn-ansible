@@ -7,3 +7,4 @@
       service_chain_genesis_generatation : "yes"
       service_chain_key_generation: "yes"
       launchHomi: "yes"
+      launchKgen: "yes"
