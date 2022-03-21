@@ -64,6 +64,7 @@
     - { regexp: '^SC_ANCHORING_PERIOD', line: 'SC_ANCHORING_PERIOD=1' }
     - { regexp: '^(RPC_API=)(.*)$', line: '\1subbridge,\2' }
     - { regexp: '^RPC_ENABLE', line: 'RPC_ENABLE=1' }
+    - { regexp: '^SC_PARENT_CHAIN_ID', line: 'SC_PARENT_CHAIN_ID={{ parent_chain_id }}' }
   when:
     - remoteNode|bool
     - not isParent|bool

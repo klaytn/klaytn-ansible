@@ -13,4 +13,6 @@ child_rpc_port: "8551"
 bridge_anchoring: "1"
 bridge_anchoring_period: "1"
 
+parent_chain_id: "1001"
+
 gen_bridge_info: "yes"
