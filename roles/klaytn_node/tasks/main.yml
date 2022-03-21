@@ -57,7 +57,6 @@
 # (For Klaytn ServiceChain) Klaytn Tool installation & Generate gensis.json and nodekey
 - name: "KLAYTN HOMI TOOL"
   include_tasks: "download_homi_tool.yml"
-  tags: "sethomi"
   when:
     - service_chain_genesis_generatation|bool
     - service_chain_key_generation|bool
