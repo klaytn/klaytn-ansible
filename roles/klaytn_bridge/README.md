@@ -28,6 +28,7 @@ See all default variables in [defaults/main.yml](defaults/main.yml)
 hash indexing
 - `bridge_anchoring`: an option to enable data enchoring
 - `bridge_anchoring_period`: the period (in block count) for data anchoring
+- `parent_chain_id`: the parent chain's chainID
 - `gen_bridge_info`: an option to generate `bridge_info.json`,
 which can be used for
 [value transfer examples](https://github.com/klaytn/servicechain-value-transfer-examples).
