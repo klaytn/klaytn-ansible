@@ -30,8 +30,8 @@
 
 - name: Klaytn Homi Tool - Launch Homi
   shell: |
-      {{ homi_bin }} setup local --servicechain --cn-num {{ num_cn }} \
-      --test-num 1 --servicechain --p2p-port {{ serivce_chain_port }} \
+      {{ homi_bin }} setup local --cn-num {{ num_cn }} \
+      --p2p-port {{ serivce_chain_port }} \
       -o {{ homi_root }}/files/homi/output
   tags: "launchhomi"
 

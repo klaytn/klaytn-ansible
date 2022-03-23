@@ -1,0 +1,37 @@
+---
+# tasks file for klaytn_bridge
+- name: "parent chain"
+  set_fact:
+    klaytn_service_type: "{{ parent_service_type }}"
+    isParent: "yes"
+    remoteNode: "yes"
+  when: inventory_hostname.find('PARENT') != -1
+
+- name: "child chain"
+  set_fact:
+    klaytn_service_type: "{{ child_service_type }}"
+    isParent: "no"
+    remoteNode: "yes"
+  when: inventory_hostname.find('CHILD') != -1
+
+- name: "builder"
+  set_fact:
+    isParent: "no"
+    remoteNode: "no"
+  when: inventory_hostname.find('builder') != -1
+
+- name: "Set Ansible values"
+  set_fact:
+    klaytn_node_DATA_DIR: "/var/{{ klaytn_service_type }}/data"
+  when:
+    - remoteNode|bool
+
+- name: "Configure Bridge"
+  include_tasks: "bridge.yml"
+  when:
+    - remoteNode|bool
+
+- name: "Generate deploy_conf"
+  include_tasks: "gen_bridge_info.yml"
+  when:
+    - gen_bridge_info|bool
