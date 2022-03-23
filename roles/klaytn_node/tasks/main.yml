@@ -4,24 +4,28 @@
   set_fact:
     klaytn_service_type: kcnd
     remoteNode: "yes"
+    useAMI: "no"
   when: inventory_hostname.find('CN') != -1
 
 - name: "kpnd - define Klaytn service"
   set_fact:
     klaytn_service_type : kpnd
     remoteNode: "yes"
+    useAMI: "no"
   when: inventory_hostname.find('PN') != -1
 
 - name: "kend - define Klaytn service"
   set_fact:
     klaytn_service_type : kend
     remoteNode: "yes"
+    useAMI: "yes"
   when: inventory_hostname.find('EN') != -1
 
 - name: "builder - define launch homi"
   set_fact:
     remoteNode: "no"
     isServiceChain: "yes"
+    useAMI: "no"
   when: inventory_hostname.find('builder') != -1
 
 - name: "kscnd - define Klaytn service"
@@ -29,20 +33,23 @@
     klaytn_service_type: kscnd
     isServiceChain: "yes"
     remoteNode: "yes"
+    useAMI: "no"
   when: inventory_hostname.find('SCN') != -1
 
 - name: "kspnd - define Klaytn service"
   set_fact:
-     klaytn_service_type : kspnd
-     isServiceChain: "yes"
-     remoteNode: "yes"
+    klaytn_service_type : kspnd
+    isServiceChain: "yes"
+    remoteNode: "yes"
+    useAMI: "no"
   when: inventory_hostname.find('SPN') != -1
 
 - name: "ksend - define Klaytn service"
   set_fact:
-     klaytn_service_type : ksend
-     isServiceChain: "yes"
-     remoteNode: "yes"
+    klaytn_service_type : ksend
+    isServiceChain: "yes"
+    remoteNode: "yes"
+    useAMI: "no"
   when: inventory_hostname.find('SEN') != -1
 
 - name: "Set Ansible values"
@@ -57,8 +64,8 @@
 # (For Klaytn ServiceChain) Klaytn Tool installation & Generate gensis.json and nodekey
 - name: "KLAYTN HOMI TOOL"
   include_tasks: "download_homi_tool.yml"
-  tags: "sethomi"
   when:
+    - not useAMI|bool
     - service_chain_genesis_generatation|bool
     - service_chain_key_generation|bool
     - launchHomi|bool
@@ -69,6 +76,7 @@
 - name: "Service Chain Material Transfer"
   include_tasks: "cp_genesis_files.yml"
   when:
+    - not useAMI|bool
     - service_chain_genesis_generatation|bool
     - service_chain_key_generation|bool
     - remoteNode|bool
@@ -78,6 +86,7 @@
 - name: "Klaytn Package Install"
   include_tasks: "installation.yml"
   when:
+    - not useAMI|bool
     - ansible_os_family != "Windows"
     - remoteNode|bool
 
@@ -85,12 +94,14 @@
 - name: "Klaytn Node Initialization"
   include_tasks: 'initialization.yml'
   when:
+    - not useAMI|bool
     - remoteNode|bool
 
 # (For Klaytn MainChain) Download ChainData of Cypres or Baobab
 - name : "Download Chain Data"
   include_tasks: "download_chaindata.yml"
   when :
+    - not useAMI|bool
     - main_chiandata_fastsync|bool
     - not isServiceChain|bool
 
@@ -98,5 +109,12 @@
 - name: "Configure Klaytn"
   include_tasks: "configure.yml"
   when:
+    - not useAMI|bool
     - ansible_os_family != "Windows"
     - remoteNode|bool
+
+# Gen new nodekey for EN created with AMI
+- name: "Generate EN nodekey"
+  include_tasks: "gen_nodekey.yml"
+  when:
+    - ansible_os_family != "Windows"

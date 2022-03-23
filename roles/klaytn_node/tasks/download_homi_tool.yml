@@ -2,7 +2,7 @@
 # description: Download/configure Klaytn Homi tool
 - name: Klaytn Homi Tool - Create Homi Directory
   file:
-    path: "{{ homi_root }}/files/homi"
+    path: "{{ homi_root }}/files/homi/output/keys"
     state: directory
     mode: "0755"
   become : yes
