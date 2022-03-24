@@ -44,9 +44,9 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   loop:
-    - { regexp: '^SC_MAIN_BRIDGE', line: 'SC_MAIN_BRIDGE=1' }
-    - { regexp: '^SC_MAIN_BRIDGE_PORT', line: 'SC_MAIN_BRIDGE_PORT={{ parent_bridge_port }}' }
-    - { regexp: '^SC_MAIN_BRIDGE_INDEXING', line: 'SC_MAIN_BRIDGE_INDEXING={{ parent_bridge_indexing }}' }
+    - { regexp: '^SC_MAIN_BRIDGE=', line: 'SC_MAIN_BRIDGE=1' }
+    - { regexp: '^SC_MAIN_BRIDGE_PORT=', line: 'SC_MAIN_BRIDGE_PORT={{ parent_bridge_port }}' }
+    - { regexp: '^SC_MAIN_BRIDGE_INDEXING=', line: 'SC_MAIN_BRIDGE_INDEXING={{ parent_bridge_indexing }}' }
   when:
     - remoteNode|bool
     - isParent|bool
@@ -58,21 +58,22 @@
     line: "{{ item.line }}"
     backrefs: "yes"
   loop:
-    - { regexp: '^SC_SUB_BRIDGE', line: 'SC_SUB_BRIDGE=1' }
-    - { regexp: '^SC_SUB_BRIDGE_PORT', line: 'SC_SUB_BRIDGE_PORT={{ child_bridge_port }}' }
-    - { regexp: '^SC_ANCHORING', line: 'SC_ANCHORING=1' }
-    - { regexp: '^SC_ANCHORING_PERIOD', line: 'SC_ANCHORING_PERIOD=1' }
+    - { regexp: '^SC_SUB_BRIDGE=', line: 'SC_SUB_BRIDGE=1' }
+    - { regexp: '^SC_SUB_BRIDGE_PORT=', line: 'SC_SUB_BRIDGE_PORT={{ child_bridge_port }}' }
+    - { regexp: '^SC_ANCHORING=', line: 'SC_ANCHORING=1' }
+    - { regexp: '^SC_ANCHORING_PERIOD=', line: 'SC_ANCHORING_PERIOD=1' }
     - { regexp: '^(RPC_API=)(.*)$', line: '\1subbridge,\2' }
-    - { regexp: '^RPC_ENABLE', line: 'RPC_ENABLE=1' }
-    - { regexp: '^SC_PARENT_CHAIN_ID', line: 'SC_PARENT_CHAIN_ID={{ parent_chain_id }}' }
+    - { regexp: '^RPC_ENABLE=', line: 'RPC_ENABLE=1' }
+    - { regexp: '^SC_PARENT_CHAIN_ID=', line: 'SC_PARENT_CHAIN_ID={{ parent_chain_id }}' }
   when:
     - remoteNode|bool
     - not isParent|bool
 
 - name: "Restart Klaytn serivce"
-  command: /bin/true
-  notify:
-    - restart klaytn
+  systemd:
+    name: "{{ klaytn_service_type }}"
+    state: restarted
+    enabled: yes
   when:
     - ansible_facts['pkg_mgr'] == 'yum'
     - remoteNode|bool
@@ -83,4 +84,9 @@
   become: yes
   when:
     - ansible_facts['pkg_mgr'] != 'yum'
+    - remoteNode|bool
+
+- name: "Wait until Klaytn to be restarted"
+  command: sleep 10
+  when:
     - remoteNode|bool
