@@ -11,29 +11,25 @@
 - name: "Get parent KNI"
   set_fact:
     kni: "{{ kni_output.stdout }}"
+    num_bridge: "{{ groups['ParentChainNode'] | length }}"
   when:
     - remoteNode|bool
     - isParent|bool
 
 - name: "Generate main bridges json file"
   copy:
-    #content: "{{ kni }}"
-    content: "[{{ hostvars['PARENT0']['kni'] }}]"
+    content: "[{{ hostvars[inventory_hostname | regex_replace('CHILD', 'PARENT')]['kni'] }}]"
     dest: "{{ klaytn_node_DATA_DIR }}/main-bridges.json"
     force: yes
   when:
     - remoteNode|bool
     - not isParent|bool
 
-- debug: msg="{{ hostvars['PARENT0']['kni'] }}"
-  tags:
-    bridge
-
 - name: Modify main bridges json file
   replace:
     path: "{{ klaytn_node_DATA_DIR }}/main-bridges.json"
     regexp: "(@\\[\\:\\:\\]\\:\\d{1,5}\\?)"
-    replace: "@{{ hostvars['PARENT0']['ansible_host'] }}:{{ parent_bridge_port }}?"
+    replace: "@{{ hostvars[inventory_hostname | regex_replace('CHILD', 'PARENT')]['ansible_host'] }}:{{ parent_bridge_port }}?"
   when:
     - remoteNode|bool
     - not isParent|bool
