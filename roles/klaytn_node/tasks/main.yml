@@ -26,6 +26,7 @@
     remoteNode: "no"
     isServiceChain: "yes"
     useAMI: "no"
+    homi_root: "{{ playbook_dir }}/klaytn-temp"
   when: inventory_hostname.find('builder') != -1
 
 - name: "kscnd - define Klaytn service"
@@ -34,6 +35,7 @@
     isServiceChain: "yes"
     remoteNode: "yes"
     useAMI: "no"
+    homi_root: "{{ playbook_dir }}/klaytn-temp"
   when: inventory_hostname.find('SCN') != -1
 
 - name: "kspnd - define Klaytn service"

@@ -1,10 +1,9 @@
 # description: Download/Run Klaytn kgen tool
 - name: Klaytn kgen tool - Create Directory
   file:
-    path: "{{ homi_root }}/files/kgen"
+    path: "{{ homi_root }}/kgen"
     state: directory
     mode: "0755"
-  become : yes
   when:
     - not remoteNode|bool
   tags: "launchKgen"
@@ -20,7 +19,7 @@
 - name: Klaytn kgen tool - Unarchive Package
   unarchive:
     src: "{{ homi_root }}/klaytn-kgen-tool.tar.gz"
-    dest: "{{ homi_root }}/files/kgen"
+    dest: "{{ homi_root }}/kgen"
     list_files: yes
     keep_newer: yes
   register: extract_result
@@ -30,7 +29,7 @@
 
 - name: Klaytn kgen tool - Set kgen binary path
   set_fact:
-    homi_bin: "{{ homi_root }}/files/kgen/{{ extract_result.files[-1] }}"
+    homi_bin: "{{ homi_root }}/kgen/{{ extract_result.files[-1] }}"
   when:
     - not remoteNode|bool
   tags: "launchKgen"
@@ -38,9 +37,9 @@
 - name: Klaytn kgen tool - Launch kgen
   shell: |
     {{ homi_bin }} --file && \
-    mv {{ homi_root }}/files/kgen/keys/nodekey {{ homi_root }}/files/kgen/keys/nodekey_{{ item }}
+    mv {{ homi_root }}/kgen/keys/nodekey {{ homi_root }}/kgen/keys/nodekey_{{ item }}
   args:
-    chdir: "{{ homi_root }}/files/kgen"
+    chdir: "{{ homi_root }}/kgen"
   loop: "{{ groups['CypressEN'] }}"
   when:
     - not remoteNode|bool
@@ -48,8 +47,9 @@
 
 - name: Copy nodekey file to EN
   copy:
-    src: "{{ homi_root }}/files/kgen/keys/nodekey_{{ inventory_hostname }}"
+    src: "{{ homi_root }}/kgen/keys/nodekey_{{ inventory_hostname }}"
     dest: "{{ klaytn_node_KEY_DIR }}/nodekey"
+  become: yes
   when:
     - useAMI|bool
     - remoteNode|bool
