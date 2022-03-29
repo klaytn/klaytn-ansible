@@ -1,12 +1,12 @@
 {
   "parent": {
-    "url": "http://{{ hostvars['PARENT0']['ansible_host'] }}:{{ parent_rpc_port }}",
-    "key": "{{ hostvars['PARENT0']['parent_nodekey'] }}",
-    "operator": {{ hostvars['CHILD0']['parent_operator'] }}
+    "url": "http://{{ hostvars['PARENT' + item]['ansible_host'] }}:{{ hostvars['PARENT' + item]['parent_rpc_port'] }}",
+    "key": "{{ hostvars['PARENT' + item]['parent_nodekey'] }}",
+    "operator": {{ hostvars['CHILD' + item]['parent_operator'] }}
   },
   "child": {
-    "url": "http://{{ hostvars['CHILD0']['ansible_host'] }}:{{ child_rpc_port }}",
-    "key": "{{ hostvars['CHILD0']['child_nodekey'] }}",
-    "operator": {{ hostvars['CHILD0']['child_operator'] }}
+    "url": "http://{{ hostvars['CHILD' + item]['ansible_host'] }}:{{ hostvars['CHILD' + item]['child_rpc_port'] }}",
+    "key": "{{ hostvars['CHILD' + item]['child_nodekey'] }}",
+    "operator": {{ hostvars['CHILD' + item]['child_operator'] }}
   }
 }

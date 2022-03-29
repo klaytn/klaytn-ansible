@@ -66,7 +66,8 @@
 - name: "Generate bridge_info.json file"
   template:
     src: "bridge_info.j2"
-    dest: "{{ ansible_env.PWD }}/bridge_info.json"
+    dest: "{{ ansible_env.PWD }}/bridge_info{{ item }}.json"
+  with_sequence: start=0 count={{ groups['ParentChainNode'] | length }}
   when:
     - not remoteNode|bool
 

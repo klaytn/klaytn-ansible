@@ -5,6 +5,7 @@
     klaytn_service_type: "{{ parent_service_type }}"
     isParent: "yes"
     remoteNode: "yes"
+    parent_rpc_port: "{{ parent_rpc_port }}"
   when: inventory_hostname.find('PARENT') != -1
 
 - name: "child chain"
@@ -12,6 +13,7 @@
     klaytn_service_type: "{{ child_service_type }}"
     isParent: "no"
     remoteNode: "yes"
+    child_rpc_port: "{{ child_rpc_port }}"
   when: inventory_hostname.find('CHILD') != -1
 
 - name: "builder"

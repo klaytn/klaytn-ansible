@@ -11,7 +11,6 @@
 - name: "Get parent KNI"
   set_fact:
     kni: "{{ kni_output.stdout }}"
-    num_bridge: "{{ groups['ParentChainNode'] | length }}"
   when:
     - remoteNode|bool
     - isParent|bool
