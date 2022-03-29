@@ -12,7 +12,7 @@ launchHomi: "no"
 launchKgen: "no"
 serivce_chain_port : "50505"
 
-homi_root: "/tmp/klaytn-ansible/klaytn-temp"
+homi_root: "{{ playbook_dir }}/klaytn-temp"
 
 
 ################### KLAYTN CONFIGURATION VARIABLES ##################################################
