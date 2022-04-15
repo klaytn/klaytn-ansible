@@ -14,6 +14,16 @@
     dest: "{{ homi_root }}/klaytn-kgen-tool.tar.gz"
   when:
     - not remoteNode|bool
+    - ansible_system == "Linux"
+  tags: "launchKgen"
+
+- name: Klaytn kgen tool - Download Package
+  get_url:
+    url: "http://packages.klaytn.net/klaytn/{{ klaytn_homi.version }}/kgen-{{klaytn_homi.version }}-darwin-10.10-amd64.tar.gz"
+    dest: "{{ homi_root }}/klaytn-kgen-tool.tar.gz"
+  when:
+    - not remoteNode|bool
+    - ansible_os_family == "Darwin"
   tags: "launchKgen"
 
 - name: Klaytn kgen tool - Unarchive Package
