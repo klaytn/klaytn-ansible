@@ -27,6 +27,13 @@
     list_files: yes
     keep_newer: yes
   register: extract_result
+  when:
+    - ansible_os_family != "Darwin"
+
+- name: Klaytn Homi Tool - Unarchive Package
+  shell: "tar -xvf {{ homi_root }}/klaytn-homi-tool.tar.gz -C {{ homi_root }}/homi"
+  when:
+    - ansible_os_family == "Darwin"
 
 - name: Klaytn Homi Tool - Set homi binary path
   set_fact:
@@ -35,6 +42,18 @@
     static_nodes_json: []
     static_nodes_knis: []
   tags: "launchhomi"
+  when:
+    - ansible_os_family != "Darwin"
+
+- name: Klaytn Homi Tool - Set homi binary path
+  set_fact:
+    homi_bin: "{{ homi_root }}/homi/homi-darwin-10.10-amd64/bin/homi"
+    num_cn: "{{ groups['ServiceChainCN'] | length }}"
+    static_nodes_json: []
+    static_nodes_knis: []
+  tags: "launchhomi"
+  when:
+    - ansible_os_family == "Darwin"
 
 - name: Klaytn Homi Tool - Launch Homi
   shell: |

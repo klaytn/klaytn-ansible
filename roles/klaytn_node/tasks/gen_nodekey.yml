@@ -35,6 +35,14 @@
   register: extract_result
   when:
     - not remoteNode|bool
+    - ansible_os_family != "Darwin"
+  tags: "launchKgen"
+
+- name: Klaytn kgen tool - Unarchive Package
+  shell: "tar -xf {{ homi_root }}/klaytn-kgen-tool.tar.gz -C {{ homi_root }}/kgen"
+  when:
+    - not remoteNode|bool
+    - ansible_os_family == "Darwin"
   tags: "launchKgen"
 
 - name: Klaytn kgen tool - Set kgen binary path
@@ -42,6 +50,15 @@
     homi_bin: "{{ homi_root }}/kgen/{{ extract_result.files[-1] }}"
   when:
     - not remoteNode|bool
+    - ansible_os_family != "Darwin"
+  tags: "launchKgen"
+
+- name: Klaytn kgen tool - Set kgen binary path
+  set_fact:
+    homi_bin: "{{ homi_root }}/kgen/kgen-darwin-10.10-amd64/bin/kgen"
+  when:
+    - not remoteNode|bool
+    - ansible_os_family == "Darwin"
   tags: "launchKgen"
 
 - name: Klaytn kgen tool - Launch kgen
