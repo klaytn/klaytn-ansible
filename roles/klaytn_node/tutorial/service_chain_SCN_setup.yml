@@ -1,6 +1,5 @@
 - name: Service_Chain_SCN_SETUP
   hosts: all
-  become: true
   roles:
     - role: klaytn_node
       main_chiandata_fastsync : "no"

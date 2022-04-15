@@ -2,10 +2,9 @@
 # description: Download/configure Klaytn Homi tool
 - name: Klaytn Homi Tool - Create Homi Directory
   file:
-    path: "{{ homi_root }}/files/homi/output/keys"
+    path: "{{ homi_root }}/homi"
     state: directory
     mode: "0755"
-  become : yes
 
 - name: Klaytn Homi Tool - Download Package
   get_url:
@@ -15,14 +14,14 @@
 - name: Klaytn Homi Tool - Unarchive Package
   unarchive:
     src: "{{ homi_root }}/klaytn-homi-tool.tar.gz"
-    dest: "{{ homi_root }}/files/homi"
+    dest: "{{ homi_root }}/homi"
     list_files: yes
     keep_newer: yes
   register: extract_result
 
 - name: Klaytn Homi Tool - Set homi binary path
   set_fact:
-    homi_bin: "{{ homi_root }}/files/homi/{{ extract_result.files[-1] }}"
+    homi_bin: "{{ homi_root }}/homi/{{ extract_result.files[-1] }}"
     num_cn: "{{ groups['ServiceChainCN'] | length }}"
     static_nodes_json: []
     static_nodes_knis: []
@@ -32,12 +31,12 @@
   shell: |
       {{ homi_bin }} setup local --cn-num {{ num_cn }} \
       --p2p-port {{ serivce_chain_port }} \
-      -o {{ homi_root }}/files/homi/output
+      -o {{ homi_root }}/output
   tags: "launchhomi"
 
 - name: Klaytn Homi Tool - Modify validator file
   replace:
-    path: "{{ homi_root }}/files/homi/output/keys/validator{{ cn_idx +1 }}"
+    path: "{{ homi_root }}/output/keys/validator{{ cn_idx +1 }}"
     regexp: "(@[0-9]\\.[0-9]\\.[0-9]\\.[0-9]\\:\\d{1,5}\\?)"
     replace: "@{{ hostvars[item]['ansible_host'] }}?"
   loop: "{{ groups['ServiceChainCN'] }}"
@@ -46,7 +45,7 @@
 
 - name: Klaytn Homi Tool - Get static nodes json variable
   set_fact:
-    static_nodes_json:  "{{ static_nodes_json + [ lookup('file', homi_root + '/files/homi/output/keys/validator' + ( (cn_idx + 1) | string) ) | from_json  ] }}"
+    static_nodes_json:  "{{ static_nodes_json + [ lookup('file', homi_root + '/output/keys/validator' + ( (cn_idx + 1) | string) ) | from_json  ] }}"
   loop: "{{ groups['ServiceChainCN'] }}"
   loop_control:
     index_var: cn_idx
@@ -60,17 +59,17 @@
 - name: Klaytn Homi Tool - Generate static-nodes.json
   copy:
     content: "{{ static_nodes_knis  }}"
-    dest: "{{ homi_root }}/files/homi/output/static-nodes.json"
+    dest: "{{ homi_root }}/output/static-nodes.json"
     force: yes
 
 - name: Modify nodekey name with SCN name
-  command: mv "{{ homi_root }}/files/homi/output/keys/nodekey{{ scn_idx +1 }}" "{{ homi_root }}/files/homi/output/keys/nodekey_{{ item }}"
+  command: mv "{{ homi_root }}/output/keys/nodekey{{ scn_idx +1 }}" "{{ homi_root }}/output/keys/nodekey_{{ item }}"
   loop: "{{ groups['ServiceChainCN'] }}"
   loop_control:
     index_var: scn_idx
 
 - name: Modify validator name with SCN name
-  command: mv "{{ homi_root }}/files/homi/output/keys/validator{{ scn_idx +1 }}" "{{ homi_root }}/files/homi/output/keys/validator_{{ item }}"
+  command: mv "{{ homi_root }}/output/keys/validator{{ scn_idx +1 }}" "{{ homi_root }}/output/keys/validator_{{ item }}"
   loop: "{{ groups['ServiceChainCN'] }}"
   loop_control:
     index_var: scn_idx

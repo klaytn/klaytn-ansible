@@ -9,20 +9,24 @@
 
 - name: Copy genesis file to scn
   copy:
-    src: "{{ homi_root }}/files/homi/output/scripts/genesis.json"
+    src: "{{ homi_root }}/output/scripts/genesis.json"
     dest: "{{ klaytn_node_GENESIS_DIR }}/genesis.json"
+  become: yes
 
 - name: Copy static-nodes file to scn
   copy:
-    src: "{{ homi_root }}/files/homi/output/static-nodes.json"
+    src: "{{ homi_root }}/output/static-nodes.json"
     dest: "{{ klaytn_node_DATA_DIR }}/static-nodes.json"
+  become: yes
 
 - name: Copy key file to scn
   copy:
-    src: "{{ homi_root }}/files/homi/output/keys/nodekey_{{ inventory_hostname }}"
+    src: "{{ homi_root }}/output/keys/nodekey_{{ inventory_hostname }}"
     dest: "{{ klaytn_node_KEY_DIR }}/nodekey"
+  become: yes
 
 - name: Copy validator file to scn
   copy:
-    src: "{{ homi_root }}/files/homi/output/keys/validator_{{ inventory_hostname }}"
+    src: "{{ homi_root }}/output/keys/validator_{{ inventory_hostname }}"
     dest: "{{ klaytn_node_GENESIS_DIR }}/"
+  become: yes
