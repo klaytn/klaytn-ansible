@@ -1,12 +1,18 @@
 {
-  "parent": {
-    "url": "http://{{ hostvars['PARENT' + item]['ansible_host'] }}:{{ hostvars['PARENT' + item]['parent_rpc_port'] }}",
-    "key": "{{ hostvars['PARENT' + item]['parent_nodekey'] }}",
-    "operator": {{ hostvars['CHILD' + item]['parent_operator'] }}
+  "sender": {
+    "child": {
+      "key": "{{ hostvars['CHILD0']['child_nodekey'] }}"
+    },
+    "parent": {
+      "key": "{{ hostvars['PARENT0']['parent_nodekey'] }}"
+    }
   },
-  "child": {
-    "url": "http://{{ hostvars['CHILD' + item]['ansible_host'] }}:{{ hostvars['CHILD' + item]['child_rpc_port'] }}",
-    "key": "{{ hostvars['CHILD' + item]['child_nodekey'] }}",
-    "operator": {{ hostvars['CHILD' + item]['child_operator'] }}
+  "url": {
+    "parent": "http://{{ hostvars['PARENT0']['ansible_host'] }}:{{ hostvars['PARENT0']['parent_rpc_port'] }}",
+    "children": [
+{% for host in groups['ChildChainNode'] %}
+      "http://{{ hostvars[host]['ansible_host'] }}:{{ hostvars[host]['child_rpc_port'] }}"{{ "," if not loop.last else "" }}
+{% endfor %}
+    ]
   }
 }
