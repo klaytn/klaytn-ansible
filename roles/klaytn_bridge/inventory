@@ -1,5 +1,7 @@
 [ParentBridgeNode]
 PARENT0 ansible_host=1.2.3.4 ansible_user=PARENT_USER
+# You can define node-specific variables here e.g., parent_rpc_port
+PARENT1 ansible_host=1.2.3.5 ansible_user=PARENT_USER parent_rpc_port=1234
 
 [ChildBridgeNode]
 CHILD0 ansible_host=5.6.7.8 ansible_user=CHILD_USER
