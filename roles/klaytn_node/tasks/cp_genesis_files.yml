@@ -1,5 +1,5 @@
 ---
-- name: Generate scn directories
+- name: Generate directories
   file:
     path: "{{ item }}"
     state: "directory"
@@ -7,26 +7,54 @@
     ["{{ klaytn_node_DATA_DIR}}", "{{ klaytn_node_GENESIS_DIR }}", "{{ klaytn_node_KEY_DIR }}"]
   become: yes
 
-- name: Copy genesis file to scn
+- name: Copy genesis file to nodes
   copy:
     src: "{{ homi_root }}/output/scripts/genesis.json"
     dest: "{{ klaytn_node_GENESIS_DIR }}/genesis.json"
   become: yes
+  when:
+    - not useAMI|bool
 
-- name: Copy static-nodes file to scn
+- name: Copy static-nodes file to SCNs
   copy:
     src: "{{ homi_root }}/output/static-nodes.json"
     dest: "{{ klaytn_node_DATA_DIR }}/static-nodes.json"
   become: yes
+  when:
+    - klaytn_service_type == "kcnd" or klaytn_service_type == "kscnd"
 
-- name: Copy key file to scn
+- name: Copy key file to SCNs
   copy:
     src: "{{ homi_root }}/output/keys/nodekey_{{ inventory_hostname }}"
     dest: "{{ klaytn_node_KEY_DIR }}/nodekey"
   become: yes
+  when:
+    - klaytn_service_type == "kcnd" or klaytn_service_type == "kscnd"
 
-- name: Copy validator file to scn
+- name: Copy validator file to SCNs
   copy:
     src: "{{ homi_root }}/output/keys/validator_{{ inventory_hostname }}"
     dest: "{{ klaytn_node_GENESIS_DIR }}/"
   become: yes
+  when:
+    - klaytn_service_type == "kcnd" or klaytn_service_type == "kscnd"
+
+- name: Copy nodekey file to nodes
+  copy:
+    src: "{{ homi_root }}/kgen/keys/nodekey_{{ inventory_hostname }}"
+    dest: "{{ klaytn_node_KEY_DIR }}/nodekey"
+  become: yes
+  when:
+    - klaytn_service_type != "kcnd"
+    - klaytn_service_type != "kscnd"
+  tags: "launchKgen"
+
+- name: Copy static-nodes file to SEN
+  copy:
+    src: "{{ homi_root }}/output/static-nodes-{{ klaytn_service_type | regex_replace('[k,d]') }}.json"
+    dest: "{{ klaytn_node_DATA_DIR }}/static-nodes.json"
+  become: yes
+  when:
+    - klaytn_service_type != "kcnd"
+    - klaytn_service_type != "kscnd"
+    - not useAMI|bool

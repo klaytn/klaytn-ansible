@@ -62,25 +62,20 @@
     - remoteNode|bool
 
 # (For Klaytn ServiceChain) Klaytn Tool installation & Generate gensis.json and nodekey
-- name: "KLAYTN HOMI TOOL"
-  include_tasks: "download_homi_tool.yml"
+- name: "Download and run Klaytn tools (homi and kgen)"
+  include_tasks: "run_klaytn_tools.yml"
   when:
-    - not useAMI|bool
     - service_chain_genesis_generatation|bool
     - service_chain_key_generation|bool
     - launchHomi|bool
-    - isServiceChain|bool
-    - not remoteNode|bool
 
 # Klaytn Service chain init file transfer
 - name: "Service Chain Material Transfer"
   include_tasks: "cp_genesis_files.yml"
   when:
-    - not useAMI|bool
     - service_chain_genesis_generatation|bool
     - service_chain_key_generation|bool
     - remoteNode|bool
-    - isServiceChain|bool
 
 # Klaytn Package Installation
 - name: "Klaytn Package Install"
@@ -113,8 +108,7 @@
     - ansible_os_family != "Windows"
     - remoteNode|bool
 
-# Gen new nodekey for EN created with AMI
-- name: "Generate EN nodekey"
-  include_tasks: "gen_nodekey.yml"
+- name: "Restart Klaytn"
+  include_tasks: "restart.yml"
   when:
-    - ansible_os_family != "Windows"
+    - remoteNode|bool

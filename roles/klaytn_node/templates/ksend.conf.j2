@@ -1,15 +1,15 @@
-# Configuration - Klaytn Package service  
+# Configuration - Klaytn Package service
 
 # cypress, baobab is only available if you don't specify NETWORK_ID.
 NETWORK={{klaytn_network_NETWORK}}
 
 # if you specify NETWORK_ID, a private network is created.
-NETWORK_ID={{klaytn_network_NETWORK}}
+NETWORK_ID={{klaytn_network_NETWORK_ID}}
 
 PORT={{klaytn_network_PORT}}
 
 SERVER_TYPE={{klaytn_network_SERVER_TYPE}}
-SYNCMODE={{klaytn_network_SYNCMODE}} 
+SYNCMODE={{klaytn_network_SYNCMODE}}
 VERBOSITY={{klaytn_network_LOG_VERBOSITY}}
 MAXCONNECTIONS={{klaytn_network_MAXCONNECTIONS}}
 
@@ -22,7 +22,7 @@ TXPOOL_EXEC_SLOTS_ALL={{klaytn_network_TXPOOL_EXEC_SLOTS_ALL}}
 TXPOOL_NONEXEC_SLOTS_ALL={{klaytn_network_TXPOOL_NONEXEC_SLOTS_ALL}}
 TXPOOL_EXEC_SLOTS_ACCOUNT={{klaytn_network_TXPOOL_EXEC_SLOTS_ACCOUNT}}
 TXPOOL_NONEXEC_SLOTS_ACCOUNT={{klaytn_network_TXPOOL_NONEXEC_SLOTS_ACCOUNT}}
-TXPOOL_LIFE_TIME={{klayt.network_TXPOOL_LIFE_TIME}}
+TXPOOL_LIFE_TIME={{klaytn_network_TXPOOL_LIFE_TIME}}
 
 # rpc options setting
 RPC_ENABLE={{klaytn_network_RPC_ENABLE}} # if this is set, the following options will be used
