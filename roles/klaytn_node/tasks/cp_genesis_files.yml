@@ -1,4 +1,13 @@
 ---
+# Clear data directory if already exists
+- name: Delete data directory
+  file:
+    state: absent
+    path: "{{ klaytn_node_DATA_DIR }}"
+  become: yes
+  when:
+    not useAMI|bool
+
 - name: Generate directories
   file:
     path: "{{ item }}"
