@@ -1,0 +1,11 @@
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'klaytn'
+    static_configs:
+    - targets:
+{% for host in groups['all'] | difference(groups['controller']) %}
+      - "{{ hostvars[host]['ansible_host'] }}:61001"
+{% endfor %}

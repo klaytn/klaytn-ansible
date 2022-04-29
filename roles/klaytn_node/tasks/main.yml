@@ -23,6 +23,7 @@
 
 - name: "builder - define launch homi"
   set_fact:
+    klaytn_service_type: builder
     remoteNode: "no"
     isServiceChain: "yes"
     useAMI: "no"
@@ -51,6 +52,14 @@
     remoteNode: "yes"
     useAMI: "no"
   when: inventory_hostname.find('SEN') != -1
+
+- name: "grafana - define Klaytn service"
+  set_fact:
+    klaytn_service_type: grafana
+    isServiceChain: "no"
+    remoteNode: "no"
+    useAMI: "no"
+  when: inventory_hostname.find('GRAFANA') != -1
 
 - name: "Set Ansible values"
   set_fact:
@@ -118,3 +127,10 @@
   include_tasks: "gen_nodekey.yml"
   when:
     - ansible_os_family != "Windows"
+    - klaytn_service_type != "grafana"
+
+# Setup grafana
+- name: "Setup grafana"
+  include_tasks: "setup_grafana.yml"
+  when:
+    - klaytn_service_type == "grafana"

@@ -36,3 +36,4 @@
 # host where run homi tool
 [controller]
 builder ansible_host=localhost ansible_connection=local ansible_user=YOUR_USER
+#GRAFANA ansible_host=5.6.7.8 ansible_user=MY_USER
