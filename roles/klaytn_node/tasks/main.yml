@@ -63,7 +63,7 @@
 
 # (For Klaytn ServiceChain) Klaytn Tool installation & Generate gensis.json and nodekey
 - name: "Download and run homi for parent chain"
-  include_tasks: "run_klaytn_tools.yml"
+  include_tasks: "run_homi.yml"
   vars:
     isServiceChain: "no"
   when:
@@ -72,7 +72,7 @@
     - launchHomi|bool
 
 - name: "Download and run homi for child chain"
-  include_tasks: "run_klaytn_tools.yml"
+  include_tasks: "run_homi.yml"
   vars:
     isServiceChain: "yes"
   when:
