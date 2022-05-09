@@ -28,9 +28,10 @@
 - name: Klaytn Homi Tool - Set homi binary path
   set_fact:
     homi_bin: "{{ homi_root }}/homi/{{ extract_result.files[-1] }}"
-    num_cn: "{{ groups['ServiceChainCN'] | length }}"
     static_nodes_json: []
     static_nodes_knis: []
+    host_group: "{{ isServiceChain|bool |  ternary('ServiceChainCN', 'CypressCN') }}"
+    num_cn: "{{ isServiceChain|bool | ternary(groups['ServiceChainCN'] | length, groups['CypressCN'] | length) }}"
   tags: "launchhomi"
   when:
     - not remoteNode|bool
@@ -49,7 +50,7 @@
     path: "{{ homi_root }}/output/keys/validator{{ cn_idx +1 }}"
     regexp: "(@[0-9]\\.[0-9]\\.[0-9]\\.[0-9]\\:\\d{1,5}\\?)"
     replace: "@{{ hostvars[item]['ansible_host'] }}?"
-  loop: "{{ groups['ServiceChainCN'] }}"
+  loop: "{{ groups[host_group] }}"
   loop_control:
     index_var: cn_idx
   when:
@@ -58,7 +59,7 @@
 - name: Klaytn Homi Tool - Get static nodes json variable
   set_fact:
     static_nodes_json:  "{{ static_nodes_json + [ lookup('file', homi_root + '/output/keys/validator' + ( (cn_idx + 1) | string) ) | from_json  ] }}"
-  loop: "{{ groups['ServiceChainCN'] }}"
+  loop: "{{ groups[host_group] }}"
   loop_control:
     index_var: cn_idx
   when:
@@ -75,14 +76,14 @@
 - name: Klaytn Homi Tool - Generate static-nodes.json
   copy:
     content: "{{ static_nodes_knis  }}"
-    dest: "{{ homi_root }}/output/static-nodes.json"
+    dest: "{{ homi_root }}/output/static-nodes-{{ isServiceChain|bool | ternary('scn', 'cn') }}.json"
     force: yes
   when:
     - not remoteNode|bool
 
 - name: Modify nodekey name with SCN name
   command: mv "{{ homi_root }}/output/keys/nodekey{{ scn_idx +1 }}" "{{ homi_root }}/output/keys/nodekey_{{ item }}"
-  loop: "{{ groups['ServiceChainCN'] }}"
+  loop: "{{ groups[host_group] }}"
   loop_control:
     index_var: scn_idx
   when:
@@ -90,126 +91,14 @@
 
 - name: Modify validator name with SCN name
   command: mv "{{ homi_root }}/output/keys/validator{{ scn_idx +1 }}" "{{ homi_root }}/output/keys/validator_{{ item }}"
-  loop: "{{ groups['ServiceChainCN'] }}"
+  loop: "{{ groups[host_group] }}"
   loop_control:
     index_var: scn_idx
   when:
     - not remoteNode|bool
 
-# For nodes except for SCN, generate nodekey using kgen
-- name: Klaytn kgen tool - Create Directory
-  file:
-    path: "{{ homi_root }}/kgen"
-    state: directory
-    mode: "0755"
-  tags: "launchKgen"
+- name: Modify genesis name with parent/child chain
+  command: mv "{{ homi_root }}/output/scripts/genesis.json" "{{ homi_root }}/output/scripts/genesis-{{ isServiceChain|bool | ternary('child', 'parent') }}.json"
   when:
     - not remoteNode|bool
 
-- name: Klaytn kgen tool - Download Package
-  get_url:
-    url: "http://packages.klaytn.net/klaytn/{{ klaytn_homi.version }}/kgen-{{klaytn_homi.version }}-0-linux-amd64.tar.gz"
-    dest: "{{ homi_root }}/klaytn-kgen-tool.tar.gz"
-  tags: "launchKgen"
-  when:
-    - not remoteNode|bool
-
-- name: Klaytn kgen tool - Unarchive Package
-  unarchive:
-    src: "{{ homi_root }}/klaytn-kgen-tool.tar.gz"
-    dest: "{{ homi_root }}/kgen"
-    list_files: yes
-    keep_newer: yes
-  register: extract_result
-  tags: "launchKgen"
-  when:
-    - not remoteNode|bool
-
-- name: Klaytn kgen tool - Set kgen binary path
-  set_fact:
-    kgen_bin: "{{ homi_root }}/kgen/{{ extract_result.files[-1] }}"
-    static_nodes_json_sen: []
-    static_nodes_knis_sen: []
-  tags: "launchKgen"
-  when:
-    - not remoteNode|bool
-
-- name: Klaytn kgen tool - Launch kgen
-  shell: |
-    {{ kgen_bin }} --file && \
-    mv {{ homi_root }}/kgen/keys/nodekey {{ homi_root }}/kgen/keys/nodekey_{{ item }} && \
-    mv {{ homi_root }}/kgen/keys/node_info.json {{ homi_root }}/kgen/keys/node_info_{{ item }}.json
-  args:
-    chdir: "{{ homi_root }}/kgen"
-  loop: "{{ [ groups['CypressPN'], groups['CypressEN'], groups['ServiceChainPN'], groups['ServiceChainEN'] ] | flatten(1) }}"
-  when: item != ""
-  tags: "launchKgen"
-  when:
-    - not remoteNode|bool
-    - item != ""
-
-- name: Klaytn kgen tool - Get private IP
-  shell: "hostname -I"
-  register: hostname
-  tags: "launchKgen"
-  when:
-    - remoteNode|bool
-    - klaytn_service_type == "kscnd" or klaytn_service_type == "kspnd"
-
-- name: Klaytn kgen tool - Set private IP variable
-  set_fact:
-    privateIP: "{{ hostname.stdout | trim }}"
-  when:
-    - remoteNode|bool
-    - klaytn_service_type == "kscnd" or klaytn_service_type == "kspnd"
-
-- name: Klaytn kgen tool - Modify node_info.json file
-  replace:
-    path: "{{ homi_root }}/kgen/keys/node_info_{{ item }}.json"
-    regexp: "(@[0-9]\\.[0-9]\\.[0-9]\\.[0-9]\\:\\d{1,5}\\?)"
-    replace: "@{{ hostvars[item]['privateIP'] }}?"
-  loop: "{{ groups['ServiceChainPN'] }}"
-  when:
-    - not remoteNode|bool
-
-- name: Klaytn kgen tool - Get static nodes json variable
-  set_fact:
-    static_nodes_json_sen:  "{{ static_nodes_json_sen + [ lookup('file', homi_root + '/kgen/keys/node_info_{{ item }}.json') | from_json  ] }}"
-  loop: "{{ groups['ServiceChainPN'] }}"
-  loop_control:
-    index_var: pn_idx
-  when:
-    - not remoteNode|bool
-
-- name: Klaytn kgen tool - Export kni address from static nodes json variable
-  set_fact:
-    # Add p2p port after IP address in each KNIs
-    static_nodes_knis_sen: "{{ static_nodes_knis_sen + [ ( item['NodeInfo'] | replace('?', ':32323?') ) ] }}"
-  with_items: "{{ static_nodes_json_sen }}"
-  when:
-    - not remoteNode|bool
-
-- name: Klaytn kgen tool - Generate static-nodes.json for SENs
-  copy:
-    content: "{{ static_nodes_knis_sen }}"
-    dest: "{{ homi_root }}/output/static-nodes-sen.json"
-    force: yes
-  when:
-    - not remoteNode|bool
-
-- name: Klaytn kgen tool - Generate static-nodes.json for SPNs
-  copy:
-    src: "{{ homi_root }}/output/static-nodes.json"
-    dest: "{{ homi_root }}/output/static-nodes-spn.json"
-    force: yes
-  when:
-    - not remoteNode|bool
-
-- name: Klaytn kgen tool - Modify static-nodes.json for SPNs
-  replace:
-    path: "{{ homi_root }}/output/static-nodes-spn.json"
-    regexp: "@{{ hostvars[item]['ansible_host'] }}"
-    replace: "@{{ hostvars[item]['privateIP'] }}"
-  loop: "{{ groups['ServiceChainCN'] }}"
-  when:
-    - not remoteNode|bool

@@ -18,7 +18,7 @@
   set_fact:
     klaytn_service_type : kend
     remoteNode: "yes"
-    useAMI: "yes"
+    useAMI: "{{ (groups['CypressCN'] | length > 0) | ternary('no', 'yes')}}"
   when: inventory_hostname.find('EN') != -1
 
 - name: "builder - define launch homi"
@@ -62,8 +62,26 @@
     - remoteNode|bool
 
 # (For Klaytn ServiceChain) Klaytn Tool installation & Generate gensis.json and nodekey
-- name: "Download and run Klaytn tools (homi and kgen)"
+- name: "Download and run homi for parent chain"
   include_tasks: "run_klaytn_tools.yml"
+  vars:
+    isServiceChain: "no"
+  when:
+    - service_chain_genesis_generatation|bool
+    - service_chain_key_generation|bool
+    - launchHomi|bool
+
+- name: "Download and run homi for child chain"
+  include_tasks: "run_klaytn_tools.yml"
+  vars:
+    isServiceChain: "yes"
+  when:
+    - service_chain_genesis_generatation|bool
+    - service_chain_key_generation|bool
+    - launchHomi|bool
+
+- name: "Download and run Klaytn tools (homi and kgen)"
+  include_tasks: "run_kgen.yml"
   when:
     - service_chain_genesis_generatation|bool
     - service_chain_key_generation|bool
