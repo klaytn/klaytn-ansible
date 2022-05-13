@@ -5,7 +5,6 @@
 [ServiceChainCN]
 # SCN01         ansible_host=10.11.12.13  ansible_user=MY_USER
 # SCN02       ansible_host=1.2.3.4      ansible_user=MY_USER
-SCN0 ansible_host=52.79.173.248 ansible_user=centos
 
 [ServiceChainPN]
 # SPN01
@@ -36,4 +35,4 @@ SCN0 ansible_host=52.79.173.248 ansible_user=centos
 
 # host where run homi tool
 [controller]
-builder ansible_host=localhost ansible_connection=local ansible_user=MY_USER
+builder ansible_host=localhost ansible_connection=local ansible_user=YOUR_USER

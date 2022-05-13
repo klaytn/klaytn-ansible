@@ -23,7 +23,6 @@
 
 - name: "builder - define launch homi"
   set_fact:
-    klaytn_service_type: builder
     remoteNode: "no"
     isServiceChain: "yes"
     useAMI: "no"
