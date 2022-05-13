@@ -21,6 +21,11 @@
   with_items:
     - { src: "templates/klaytn.yml", dest: "{{ grafana_conf_dir }}/provisioning/datasources/klaytn.yml" }
     - { src: "templates/klaytn-dashboard.yml", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/klaytn-dashboard.yml" }
+    - { src: "templates/grafana_klaytn.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn.json" }
+    - { src: "templates/grafana_klaytn_data.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_data.json" }
+    - { src: "templates/grafana_klaytn_leveldb.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_leveldb.json" }
+    - { src: "templates/grafana_klaytn_miner.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_minor.json" }
+    - { src: "templates/grafana_klaytn_network.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_network.json" }
     - { src: "templates/grafana_klaytn_service_chain.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_service_chain.json" }
   become: yes
 
