@@ -128,9 +128,3 @@
   when:
     - ansible_os_family != "Windows"
     - klaytn_service_type != "grafana"
-
-# Setup grafana
-- name: "Setup grafana"
-  include_tasks: "setup_grafana.yml"
-  when:
-    - klaytn_service_type == "grafana"

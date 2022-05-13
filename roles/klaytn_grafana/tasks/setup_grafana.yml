@@ -4,13 +4,14 @@
     path: "{{ item }}"
     state: "directory"
   with_items:
-    ["/etc/grafana/conf/provisioning/datasources", "/etc/grafana/conf/provisioning/dashboards"]
+    ["{{ grafana_conf_dir }}/provisioning/datasources", "{{ grafana_conf_dir }}/provisioning/dashboards"]
   become: yes
 
 - name: "Grafana Configuration with templates"
   template:
     src: "prometheus.yml.j2"
-    dest: "/etc/grafana/conf/prometheus.yml"
+    dest: "{{ grafana_conf_dir }}/prometheus.yml"
+    force: yes
   become: yes
 
 - name: "Copy static files"
@@ -18,9 +19,9 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items:
-    - { src: "templates/klaytn.yml", dest: "/etc/grafana/conf/provisioning/datasources/klaytn.yml" }
-    - { src: "templates/klaytn-dashboard.yml", dest: "/etc/grafana/conf/provisioning/dashboards/klaytn-dashboard.yml" }
-    - { src: "templates/grafana_klaytn_service_chain.json", dest: "/etc/grafana/conf/provisioning/dashboards/grafana_klaytn_service_chain.json" }
+    - { src: "templates/klaytn.yml", dest: "{{ grafana_conf_dir }}/provisioning/datasources/klaytn.yml" }
+    - { src: "templates/klaytn-dashboard.yml", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/klaytn-dashboard.yml" }
+    - { src: "templates/grafana_klaytn_service_chain.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_service_chain.json" }
   become: yes
 
 - name: "Install docker"
@@ -67,3 +68,8 @@
     state: started
     detach: yes
   become: yes
+
+- name: "Restart Docker daemon"
+  command: /bin/true
+  notify:
+    - restart docker daemon

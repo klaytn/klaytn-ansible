@@ -1,0 +1,6 @@
+- name: Grafana_Setup
+  hosts: all
+  become: true
+  roles:
+    - role: klaytn_grafana
+      klaytn_node_list: ["1.2.3.4", "5.6.7.8"]
