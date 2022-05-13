@@ -53,14 +53,6 @@
     useAMI: "no"
   when: inventory_hostname.find('SEN') != -1
 
-- name: "grafana - define Klaytn service"
-  set_fact:
-    klaytn_service_type: grafana
-    isServiceChain: "no"
-    remoteNode: "no"
-    useAMI: "no"
-  when: inventory_hostname.find('GRAFANA') != -1
-
 - name: "Set Ansible values"
   set_fact:
     klaytn_node_GENESIS_DIR: "/var/{{ klaytn_service_type }}/genesis"
@@ -127,4 +119,3 @@
   include_tasks: "gen_nodekey.yml"
   when:
     - ansible_os_family != "Windows"
-    - klaytn_service_type != "grafana"
