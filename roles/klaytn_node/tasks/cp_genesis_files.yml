@@ -1,9 +1,10 @@
 ---
-# Clear data directory if already exists
-- name: Delete data directory
+# Clear data and log directory if already exists
+- name: Delete data and log directory
   file:
     state: absent
-    path: "{{ klaytn_node_DATA_DIR }}"
+    path: "{{ item }}"
+  with_items: ["{{ klaytn_node_DATA_DIR }}", "{{ klaytn_node_LOG_DIR }}"]
   become: yes
   when:
     not useAMI|bool
