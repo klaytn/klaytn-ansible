@@ -192,7 +192,6 @@
     - not remoteNode|bool
     - ansible_os_family == "Darwin"
 
-
 - name: Klaytn kgen tool - Launch kgen
   shell: |
     {{ kgen_bin }} --file && \
