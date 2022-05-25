@@ -1,5 +1,5 @@
 ---
-- name: "Initialzation - Make genesis file dir"
+- name: "Initialization - Make genesis file dir"
   file:
     path: "{{ klaytn_node_GENESIS_DIR }}"
     state: "directory"
@@ -7,7 +7,7 @@
   when:
     - not isServiceChain|bool
 
-- name: "Initialzation - Download Genesis File"
+- name: "Initialization - Download Genesis File"
   get_url:
     url: http://packages.klaytn.net/{{ klaytn_network_NETWORK }}/genesis.json
     dest: "{{ klaytn_node_GENESIS_DIR }}/genesis.json"
@@ -15,13 +15,13 @@
   when:
     - not isServiceChain|bool
 
-- name: "Initialzation - Genensis"
+- name: "Initialization - Genensis"
   shell:
     cmd: "{{ klaytn_service_type | regex_replace ('d') }} init --datadir {{ klaytn_node_DATA_DIR }} {{ klaytn_node_GENESIS_DIR }}/genesis.json"
   become: yes
   when: ansible_facts['pkg_mgr'] == 'yum'
 
-- name: "Initialzation - Genensis"
+- name: "Initialization - Genensis"
   shell:
     cmd: "/opt/{{ klaytn_service_type }}/bin/{{ klaytn_service_type | regex_replace ('d') }} init --datadir {{ klaytn_node_DATA_DIR }} {{ klaytn_node_GENESIS_DIR }}/genesis.json"
   become: yes
