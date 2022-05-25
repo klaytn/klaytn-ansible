@@ -1,0 +1,80 @@
+# description: Setup grafana
+- name: "Make configuration directory"
+  file:
+    path: "{{ item }}"
+    state: "directory"
+  with_items:
+    ["{{ grafana_conf_dir }}/provisioning/datasources", "{{ grafana_conf_dir }}/provisioning/dashboards"]
+  become: yes
+
+- name: "Grafana Configuration with templates"
+  template:
+    src: "prometheus.yml.j2"
+    dest: "{{ grafana_conf_dir }}/prometheus.yml"
+    force: yes
+  become: yes
+
+- name: "Copy static files"
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: "templates/klaytn.yml", dest: "{{ grafana_conf_dir }}/provisioning/datasources/klaytn.yml" }
+    - { src: "templates/klaytn-dashboard.yml", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/klaytn-dashboard.yml" }
+    - { src: "templates/grafana_klaytn.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn.json" }
+    - { src: "templates/grafana_klaytn_data.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_data.json" }
+    - { src: "templates/grafana_klaytn_leveldb.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_leveldb.json" }
+    - { src: "templates/grafana_klaytn_miner.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_minor.json" }
+    - { src: "templates/grafana_klaytn_network.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_network.json" }
+    - { src: "templates/grafana_klaytn_service_chain.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_service_chain.json" }
+  become: yes
+
+- name: "Install docker"
+  shell: "curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh"
+  become: yes
+
+- name: "Start docker daemon"
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Install pip
+  shell: "curl -fsSL https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py && python get-pip.py"
+  become: yes
+
+- name: Install docker python package
+  pip:
+    name: docker
+    extra_args: "--ignore-installed"
+  become: yes
+
+- name: "Run promtheus docker"
+  docker_container:
+    name: prometheus
+    image: prom/prometheus
+    volumes:
+      - /etc/grafana/conf/prometheus.yml:/etc/prometheus/prometheus.yml
+    network_mode: host
+    restart_policy: always
+    state: started
+    detach: yes
+  become: yes
+
+- name: "Run grafana docker"
+  docker_container:
+    name: grafana
+    image: grafana/grafana
+    volumes:
+      - /etc/grafana/conf/provisioning:/etc/grafana/provisioning
+    network_mode: host
+    restart_policy: always
+    state: started
+    detach: yes
+  become: yes
+
+- name: "Restart Docker daemon"
+  command: /bin/true
+  notify:
+    - restart docker daemon
