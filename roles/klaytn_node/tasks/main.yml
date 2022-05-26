@@ -61,6 +61,13 @@
   when:
     - remoteNode|bool
 
+# Check OS type
+- name: "Check hosts' OS type"
+  fail: msg="The hosts' OS should be either Linux or MacOS."
+  when:
+    - ansible_system != "Linux"
+    - ansible_os_family != "Darwin"
+
 # (For Klaytn ServiceChain) Klaytn Tool installation & Generate gensis.json and nodekey
 - name: "Download and run homi for parent chain"
   include_tasks: "run_homi.yml"
@@ -80,7 +87,7 @@
     - service_chain_key_generation|bool
     - launchHomi|bool
 
-- name: "Download and run Klaytn tools (homi and kgen)"
+- name: "Download and run kgen"
   include_tasks: "run_kgen.yml"
   when:
     - service_chain_genesis_generatation|bool
@@ -100,7 +107,6 @@
   include_tasks: "installation.yml"
   when:
     - not useAMI|bool
-    - ansible_os_family != "Windows"
     - remoteNode|bool
 
 # Klaytn Node Initialization
@@ -123,7 +129,6 @@
   include_tasks: "configure.yml"
   when:
     - not useAMI|bool
-    - ansible_os_family != "Windows"
     - remoteNode|bool
 
 - name: "Restart Klaytn"

@@ -1,0 +1,6 @@
+- name: Grafana_Setup
+  hosts: all
+  become: true
+  roles:
+    - role: klaytn_grafana
+      grafana_port: "3000"

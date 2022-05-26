@@ -1,0 +1,5 @@
+---
+# defaults file for klaytn_grafana
+prometheus_port: "61001"
+grafana_port: "3000"
+klaytn_node_list: []

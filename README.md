@@ -18,6 +18,8 @@ ansible-galaxy collection install klaytndev.klaytn_ansible
 No           |   role name   |  description
 ------------ | ------------- | -------------
  1           |    [klaytn_node](https://github.com/klaytn/klaytn-ansible/tree/master/roles/klaytn_node)     |   install / configuration Klaytn packages
+ 2           |    [klaytn_bridge](https://github.com/klaytn/klaytn-ansible/tree/master/roles/klaytn_bridge)     |   configure bridge between two chains
+ 3           |    [klaytn_grafana](https://github.com/klaytn/klaytn-ansible/tree/master/roles/klaytn_grafana)     |   install / configure grafana
 
 ## Launch Ansible
 ### Preparation
@@ -76,5 +78,12 @@ You are also able to use your own `Ansible`, `Ansible AWX` or `Ansible Towner`
 For example,
 ```
 $ cp roles/klaytn_node/tutorial/service_chain_SCN_setup.yml .
-$ ansible-playbook -i roles/klaytn_node/inventory service_chain_SCN_setup.yml --ask-become-pass
+$ ansible-playbook -i roles/klaytn_node/inventory service_chain_SCN_setup.yml
+```
+
+Or you can use the provided script.
+```
+$ ./test_roles.sh node
+$ ./test_roles.sh bridge
+$ ./test_roles.sh grafana
 ```

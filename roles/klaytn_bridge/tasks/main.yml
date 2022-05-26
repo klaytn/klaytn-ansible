@@ -28,6 +28,13 @@
   when:
     - remoteNode|bool
 
+# Check OS type
+- name: "Check hosts' OS type"
+  fail: msg="The hosts' OS should be either Linux or MacOS."
+  when:
+    - ansible_system != "Linux"
+    - ansible_os_family != "Darwin"
+
 - name: "Configure Bridge"
   include_tasks: "bridge.yml"
   when:

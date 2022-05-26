@@ -1,0 +1,19 @@
+---
+# tasks file for klaytn_bridge
+- name: "grafana"
+  set_fact:
+    isGrafana: "yes"
+    prometheus_port: "{{ prometheus_port }}"
+    grafana_port: "{{ grafana_port }}"
+  when: inventory_hostname.find('GRAFANA') != -1
+
+- name: "Set Ansible values"
+  set_fact:
+    grafana_conf_dir: "/etc/grafana/conf"
+  when:
+    - isGrafana|bool
+
+- name: "Install and configure grafana"
+  include_tasks: "setup_grafana.yml"
+  when:
+    - isGrafana|bool
