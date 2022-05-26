@@ -19,15 +19,15 @@
 
 - name: Copy genesis file to nodes
   copy:
-    src: "{{ homi_root }}/output/scripts/genesis.json"
+    src: "{{ homi_root }}/output/scripts/genesis-{{ isServiceChain|bool | ternary('child','parent') }}.json"
     dest: "{{ klaytn_node_GENESIS_DIR }}/genesis.json"
   become: yes
   when:
     - not useAMI|bool
 
-- name: Copy static-nodes file to SCNs
+- name: Copy static-nodes file
   copy:
-    src: "{{ homi_root }}/output/static-nodes.json"
+    src: "{{ homi_root }}/output/static-nodes-{{ klaytn_service_type | regex_replace('[k,d]') }}.json"
     dest: "{{ klaytn_node_DATA_DIR }}/static-nodes.json"
   become: yes
   when:
@@ -58,13 +58,3 @@
     - klaytn_service_type != "kcnd"
     - klaytn_service_type != "kscnd"
   tags: "launchKgen"
-
-- name: Copy static-nodes file to SEN
-  copy:
-    src: "{{ homi_root }}/output/static-nodes-{{ klaytn_service_type | regex_replace('[k,d]') }}.json"
-    dest: "{{ klaytn_node_DATA_DIR }}/static-nodes.json"
-  become: yes
-  when:
-    - klaytn_service_type != "kcnd"
-    - klaytn_service_type != "kscnd"
-    - not useAMI|bool

@@ -1,0 +1,104 @@
+---
+# description: Download/configure/run Klaytn tools - homi and kgen
+- name: Klaytn Homi Tool - Create Homi Directory
+  file:
+    path: "{{ homi_root }}/homi"
+    state: directory
+    mode: "0755"
+  when:
+    - not remoteNode|bool
+
+- name: Klaytn Homi Tool - Download Package
+  get_url:
+    url: "http://packages.klaytn.net/klaytn/{{ klaytn_homi.version }}/homi-{{klaytn_homi.version }}-0-linux-amd64.tar.gz"
+    dest: "{{ homi_root }}/klaytn-homi-tool.tar.gz"
+  when:
+    - not remoteNode|bool
+
+- name: Klaytn Homi Tool - Unarchive Package
+  unarchive:
+    src: "{{ homi_root }}/klaytn-homi-tool.tar.gz"
+    dest: "{{ homi_root }}/homi"
+    list_files: yes
+    keep_newer: yes
+  register: extract_result
+  when:
+    - not remoteNode|bool
+
+- name: Klaytn Homi Tool - Set homi binary path
+  set_fact:
+    homi_bin: "{{ homi_root }}/homi/{{ extract_result.files[-1] }}"
+    static_nodes_json: []
+    static_nodes_knis: []
+    host_group: "{{ isServiceChain|bool |  ternary('ServiceChainCN', 'CypressCN') }}"
+    num_cn: "{{ isServiceChain|bool | ternary(groups['ServiceChainCN'] | length, groups['CypressCN'] | length) }}"
+  tags: "launchhomi"
+  when:
+    - not remoteNode|bool
+
+- name: Klaytn Homi Tool - Launch Homi
+  shell: |
+      {{ homi_bin }} setup local --cn-num {{ num_cn }} \
+      --p2p-port {{ serivce_chain_port }} --network-id {{ klaytn_network_NETWORK_ID }} \
+      -o {{ homi_root }}/output
+  tags: "launchhomi"
+  when:
+    - not remoteNode|bool
+
+- name: Klaytn Homi Tool - Modify validator file
+  replace:
+    path: "{{ homi_root }}/output/keys/validator{{ cn_idx +1 }}"
+    regexp: "(@[0-9]\\.[0-9]\\.[0-9]\\.[0-9]\\:\\d{1,5}\\?)"
+    replace: "@{{ hostvars[item]['ansible_host'] }}?"
+  loop: "{{ groups[host_group] }}"
+  loop_control:
+    index_var: cn_idx
+  when:
+    - not remoteNode|bool
+
+- name: Klaytn Homi Tool - Get static nodes json variable
+  set_fact:
+    static_nodes_json:  "{{ static_nodes_json + [ lookup('file', homi_root + '/output/keys/validator' + ( (cn_idx + 1) | string) ) | from_json  ] }}"
+  loop: "{{ groups[host_group] }}"
+  loop_control:
+    index_var: cn_idx
+  when:
+    - not remoteNode|bool
+
+- name: Klaytn Homi Tool - Export kni address from static nodes json variable
+  set_fact:
+    # Add p2p port after IP address in each KNIs
+    static_nodes_knis: "{{ static_nodes_knis + [ ( item['NodeInfo'] | replace('?', ':32323?') ) ] }}"
+  with_items: "{{ static_nodes_json }}"
+  when:
+    - not remoteNode|bool
+
+- name: Klaytn Homi Tool - Generate static-nodes.json
+  copy:
+    content: "{{ static_nodes_knis  }}"
+    dest: "{{ homi_root }}/output/static-nodes-{{ isServiceChain|bool | ternary('scn', 'cn') }}.json"
+    force: yes
+  when:
+    - not remoteNode|bool
+
+- name: Modify nodekey name with SCN name
+  command: mv "{{ homi_root }}/output/keys/nodekey{{ scn_idx +1 }}" "{{ homi_root }}/output/keys/nodekey_{{ item }}"
+  loop: "{{ groups[host_group] }}"
+  loop_control:
+    index_var: scn_idx
+  when:
+    - not remoteNode|bool
+
+- name: Modify validator name with SCN name
+  command: mv "{{ homi_root }}/output/keys/validator{{ scn_idx +1 }}" "{{ homi_root }}/output/keys/validator_{{ item }}"
+  loop: "{{ groups[host_group] }}"
+  loop_control:
+    index_var: scn_idx
+  when:
+    - not remoteNode|bool
+
+- name: Modify genesis name with parent/child chain
+  command: mv "{{ homi_root }}/output/scripts/genesis.json" "{{ homi_root }}/output/scripts/genesis-{{ isServiceChain|bool | ternary('child', 'parent') }}.json"
+  when:
+    - not remoteNode|bool
+
