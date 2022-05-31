@@ -1,18 +1,26 @@
 {
   "sender": {
     "child": {
-      "key": "{{ hostvars['CHILD0']['child_nodekey'] }}"
+      "key": "{{ hostvars[groups['ChildBridgeNode'][0]]['child_nodekey'] }}"
     },
     "parent": {
-      "key": "{{ hostvars['PARENT0']['parent_nodekey'] }}"
+      "key": "{{ hostvars[groups['ParentBridgeNode'][0]]['parent_nodekey'] }}"
     }
   },
   "url": {
-    "parent": "http://{{ hostvars['PARENT0']['ansible_host'] }}:{{ hostvars['PARENT0']['parent_rpc_port'] }}",
-    "children": [
-{% for host in groups['ChildChainNode'] %}
-      "http://{{ hostvars[host]['ansible_host'] }}:{{ hostvars[host]['child_rpc_port'] }}"{{ "," if not loop.last else "" }}
+    "parent": "http://{{ hostvars[groups['ParentBridgeNode'][0]]['ansible_host'] }}:{{ hostvars[groups['ParentBridgeNode'][0]]['parent_rpc_port'] }}",
+    "child": "http://{{ hostvars[groups['ChildBridgeNode'][0]]['ansible_host'] }}:{{ hostvars[groups['ChildBridgeNode'][0]]['child_rpc_port'] }}"
+  },
+  "bridges": [
+{% for host in groups['ChildBridgeNode'] %}
+    {
+      "child": {
+          "operator": {{ hostvars[host]['child_operator'] }}
+      },
+      "parent": {
+          "operator": {{ hostvars[host]['parent_operator'] }}
+      }
+    }{{ "," if not loop.last else "" }}
 {% endfor %}
-    ]
-  }
+  ]
 }
