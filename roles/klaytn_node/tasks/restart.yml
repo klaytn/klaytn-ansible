@@ -1,11 +1,18 @@
-- name: "Restart Klaytn serivce"
-  command: /bin/true
-  notify:
-    - restart klaytn
+- name: "Restart Klaytn service"
+  systemd:
+    name: "{{ klaytn_service_type }}"
+    state: restarted
+    enabled: yes
+  become: yes
   when: ansible_facts['pkg_mgr'] == 'yum'
+
 
 - name: "Run Klaytn"
   # Below command is to run Klaytn in background even after the shell opened by ansible is exited.
   command: "nohup /opt/{{ klaytn_service_type }}/bin/{{ klaytn_service_type }} start </dev/null >/dev/null 2>&1 &"
   become: yes
   when: ansible_facts['pkg_mgr'] != 'yum'
+
+- name: "Wait until Klaytn is restarted"
+  wait_for:
+    path: /var/{{ klaytn_service_type }}/data/klay.ipc
