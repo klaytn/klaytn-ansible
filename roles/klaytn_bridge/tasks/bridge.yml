@@ -20,15 +20,30 @@
     content: "[{{ hostvars[inventory_hostname | regex_replace('CHILD', 'PARENT')]['kni'] }}]"
     dest: "{{ klaytn_node_DATA_DIR }}/main-bridges.json"
     force: yes
+  become: yes
   when:
     - remoteNode|bool
     - not isParent|bool
 
+- name: Get private IP
+  shell: "hostname -I"
+  register: hostname
+  tags: "launchKgen"
+  when:
+    - remoteNode|bool
+
+- name: Set private IP variable
+  set_fact:
+    privateIP: "{{ hostname.stdout | trim }}"
+  when:
+    - remoteNode|bool
+
 - name: Modify main bridges json file
   replace:
     path: "{{ klaytn_node_DATA_DIR }}/main-bridges.json"
-    regexp: "(@\\[\\:\\:\\]\\:\\d{1,5}\\?)"
-    replace: "@{{ hostvars[inventory_hostname | regex_replace('CHILD', 'PARENT')]['ansible_host'] }}:{{ parent_bridge_port }}?"
+    regexp: "@0.0.0.0:0"
+    replace: "@{{ hostvars[inventory_hostname | regex_replace('CHILD', 'PARENT')]['privateIP'] }}:{{ parent_bridge_port }}"
+  become: yes
   when:
     - remoteNode|bool
     - not isParent|bool
@@ -38,10 +53,13 @@
     path: "/etc/{{ klaytn_service_type }}/conf/{{ klaytn_service_type }}.conf"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
+  become: yes
   loop:
     - { regexp: '^SC_MAIN_BRIDGE=', line: 'SC_MAIN_BRIDGE=1' }
     - { regexp: '^SC_MAIN_BRIDGE_PORT=', line: 'SC_MAIN_BRIDGE_PORT={{ parent_bridge_port }}' }
     - { regexp: '^SC_MAIN_BRIDGE_INDEXING=', line: 'SC_MAIN_BRIDGE_INDEXING={{ parent_bridge_indexing }}' }
+    - { regexp: '^(RPC_API=)(.*)$', line: '\1mainbridge,\2' }
+    - { regexp: '^RPC_ENABLE=', line: 'RPC_ENABLE=1' }
   when:
     - remoteNode|bool
     - isParent|bool
@@ -52,6 +70,7 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
     backrefs: "yes"
+  become: yes
   loop:
     - { regexp: '^SC_SUB_BRIDGE=', line: 'SC_SUB_BRIDGE=1' }
     - { regexp: '^SC_SUB_BRIDGE_PORT=', line: 'SC_SUB_BRIDGE_PORT={{ child_bridge_port }}' }
@@ -69,6 +88,7 @@
     name: "{{ klaytn_service_type }}"
     state: restarted
     enabled: yes
+  become: yes
   when:
     - ansible_facts['pkg_mgr'] == 'yum'
     - remoteNode|bool
@@ -81,7 +101,8 @@
     - ansible_facts['pkg_mgr'] != 'yum'
     - remoteNode|bool
 
-- name: "Wait until Klaytn to be restarted"
-  command: sleep 10
+- name: "Wait until Klaytn is restarted"
+  wait_for:
+    path: /var/{{ klaytn_service_type }}/data/klay.ipc
   when:
     - remoteNode|bool
