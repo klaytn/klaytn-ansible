@@ -38,7 +38,7 @@
 
 - name: Klaytn Homi Tool - Launch Homi
   shell: |
-      {{ homi_bin }} setup local --cn-num {{ num_cn }} \
+      {{ homi_bin }} setup local --cn-num {{ num_cn }} --chainID {{ klaytn_network_NETWORK_ID }} \
       --p2p-port {{ serivce_chain_port }} --network-id {{ klaytn_network_NETWORK_ID }} \
       -o {{ homi_root }}/output
   tags: "launchhomi"

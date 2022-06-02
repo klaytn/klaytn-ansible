@@ -73,6 +73,7 @@
   include_tasks: "run_homi.yml"
   vars:
     isServiceChain: "no"
+    klaytn_network_NETWORK_ID: 1001
   when:
     - service_chain_genesis_generatation|bool
     - service_chain_key_generation|bool
@@ -83,6 +84,7 @@
   include_tasks: "run_homi.yml"
   vars:
     isServiceChain: "yes"
+    klaytn_network_NETWORK_ID: 1004
   when:
     - service_chain_genesis_generatation|bool
     - service_chain_key_generation|bool
