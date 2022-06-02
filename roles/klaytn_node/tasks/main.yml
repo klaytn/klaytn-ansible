@@ -77,6 +77,7 @@
     - service_chain_genesis_generatation|bool
     - service_chain_key_generation|bool
     - launchHomi|bool
+    - groups["CypressCN"] is defined and (groups["CypressCN"]|length>0)
 
 - name: "Download and run homi for child chain"
   include_tasks: "run_homi.yml"
@@ -86,6 +87,7 @@
     - service_chain_genesis_generatation|bool
     - service_chain_key_generation|bool
     - launchHomi|bool
+    - groups["ServiceChainCN"] is defined and (groups["ServiceChainCN"]|length>0)
 
 - name: "Download and run kgen"
   include_tasks: "run_kgen.yml"
