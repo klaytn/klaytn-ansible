@@ -31,7 +31,7 @@
     dest: "{{ klaytn_node_DATA_DIR }}/static-nodes.json"
   become: yes
   when:
-    - klaytn_service_type == "kcnd" or klaytn_service_type == "kscnd"
+    - not useAMI|bool
 
 - name: Copy key file to SCNs
   copy:

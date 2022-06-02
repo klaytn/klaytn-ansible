@@ -83,6 +83,7 @@
     index_var: pn_idx
   when:
     - not remoteNode|bool
+    - groups["CypressEN"] is defined and (groups["CypressEN"]|length>0)
 
 - name: Klaytn kgen tool - Get static nodes json variable for SEN
   set_fact:
@@ -92,6 +93,7 @@
     index_var: pn_idx
   when:
     - not remoteNode|bool
+    - groups["ServiceChainEN"] is defined and (groups["ServiceChainEN"]|length>0)
 
 - name: Klaytn kgen tool - Export kni address from static nodes json variable for EN
   set_fact:
@@ -100,6 +102,7 @@
   with_items: "{{ static_nodes_json_en }}"
   when:
     - not remoteNode|bool
+    - groups["CypressEN"] is defined and (groups["CypressEN"]|length>0)
 
 - name: Klaytn kgen tool - Export kni address from static nodes json variable for SEN
   set_fact:
@@ -108,6 +111,7 @@
   with_items: "{{ static_nodes_json_sen }}"
   when:
     - not remoteNode|bool
+    - groups["ServiceChainEN"] is defined and (groups["ServiceChainEN"]|length>0)
 
 - name: Klaytn kgen tool - Generate static-nodes.json for ENs
   copy:
@@ -116,6 +120,7 @@
     force: yes
   when:
     - not remoteNode|bool
+    - groups["CypressEN"] is defined and (groups["CypressEN"]|length>0)
 
 - name: Klaytn kgen tool - Generate static-nodes.json for SENs
   copy:
@@ -124,6 +129,7 @@
     force: yes
   when:
     - not remoteNode|bool
+    - groups["ServiceChainEN"] is defined and (groups["ServiceChainEN"]|length>0)
 
 - name: Klaytn kgen tool - Generate static-nodes.json for PNs
   copy:
@@ -132,6 +138,7 @@
     force: yes
   when:
     - not remoteNode|bool
+    - groups["CypressPN"] is defined and (groups["CypressPN"]|length>0)
 
 - name: Klaytn kgen tool - Generate static-nodes.json for SPNs
   copy:
@@ -140,6 +147,7 @@
     force: yes
   when:
     - not remoteNode|bool
+    - groups["ServiceChainPN"] is defined and (groups["ServiceChainPN"]|length>0)
 
 - name: Klaytn kgen tool - Modify static-nodes.json for PNs
   replace:
@@ -149,6 +157,7 @@
   loop: "{{ groups['CypressCN'] }}"
   when:
     - not remoteNode|bool
+    - groups["CypressPN"] is defined and (groups["CypressPN"]|length>0)
 
 - name: Klaytn kgen tool - Modify static-nodes.json for SPNs
   replace:
@@ -158,3 +167,4 @@
   loop: "{{ groups['ServiceChainCN'] }}"
   when:
     - not remoteNode|bool
+    - groups["ServiceChainPN"] is defined and (groups["ServiceChainPN"]|length>0)
