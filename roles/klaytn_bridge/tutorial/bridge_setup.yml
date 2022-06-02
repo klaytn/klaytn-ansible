@@ -1,7 +1,4 @@
 - name: Bridge_Setup
   hosts: all
-  become: true
   roles:
     - role: klaytn_bridge
-      parent_service_type: "kend"
-      child_service_type: "kscnd"
