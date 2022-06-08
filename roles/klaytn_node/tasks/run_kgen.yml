@@ -84,6 +84,7 @@
   when:
     - not remoteNode|bool
     - groups["CypressEN"] is defined and (groups["CypressEN"]|length>0)
+    - groups["CypressPN"] is defined and (groups["CypressPN"]|length>0)
 
 - name: Klaytn kgen tool - Get static nodes json variable for SEN
   set_fact:
@@ -94,6 +95,7 @@
   when:
     - not remoteNode|bool
     - groups["ServiceChainEN"] is defined and (groups["ServiceChainEN"]|length>0)
+    - groups["ServiceChainPN"] is defined and (groups["ServiceChainPN"]|length>0)
 
 - name: Klaytn kgen tool - Export kni address from static nodes json variable for EN
   set_fact:
@@ -103,6 +105,7 @@
   when:
     - not remoteNode|bool
     - groups["CypressEN"] is defined and (groups["CypressEN"]|length>0)
+    - groups["CypressPN"] is defined and (groups["CypressPN"]|length>0)
 
 - name: Klaytn kgen tool - Export kni address from static nodes json variable for SEN
   set_fact:
@@ -112,6 +115,7 @@
   when:
     - not remoteNode|bool
     - groups["ServiceChainEN"] is defined and (groups["ServiceChainEN"]|length>0)
+    - groups["ServiceChainPN"] is defined and (groups["ServiceChainPN"]|length>0)
 
 - name: Klaytn kgen tool - Generate static-nodes.json for ENs
   copy:
@@ -121,6 +125,7 @@
   when:
     - not remoteNode|bool
     - groups["CypressEN"] is defined and (groups["CypressEN"]|length>0)
+    - groups["CypressPN"] is defined and (groups["CypressPN"]|length>0)
 
 - name: Klaytn kgen tool - Generate static-nodes.json for SENs
   copy:
@@ -130,6 +135,7 @@
   when:
     - not remoteNode|bool
     - groups["ServiceChainEN"] is defined and (groups["ServiceChainEN"]|length>0)
+    - groups["ServiceChainPN"] is defined and (groups["ServiceChainPN"]|length>0)
 
 - name: Klaytn kgen tool - Generate static-nodes.json for PNs
   copy:
@@ -168,3 +174,50 @@
   when:
     - not remoteNode|bool
     - groups["ServiceChainPN"] is defined and (groups["ServiceChainPN"]|length>0)
+
+# Below covers cases when there's no PNs or SPNs
+- name: Klaytn kgen tool - Generate static-nodes.json for ENs when there's no PNs
+  copy:
+    src: "{{ homi_root }}/output/static-nodes-cn.json"
+    dest: "{{ homi_root }}/output/static-nodes-en.json"
+    force: yes
+  when:
+    - not remoteNode|bool
+    - groups["CypressCN"] is defined and (groups["CypressCN"]|length>0)
+    - groups["CypressPN"] is defined and (groups["CypressPN"]|length==0)
+    - groups["CypressEN"] is defined and (groups["CypressEN"]|length>0)
+
+- name: Klaytn kgen tool - Generate static-nodes.json for SPNs when there's no SPN
+  copy:
+    src: "{{ homi_root }}/output/static-nodes-scn.json"
+    dest: "{{ homi_root }}/output/static-nodes-sen.json"
+    force: yes
+  when:
+    - not remoteNode|bool
+    - groups["ServiceChainCN"] is defined and (groups["ServiceChainCN"]|length>0)
+    - groups["ServiceChainPN"] is defined and (groups["ServiceChainPN"]|length==0)
+    - groups["ServiceChainEN"] is defined and (groups["ServiceChainEN"]|length>0)
+
+- name: Klaytn kgen tool - Modify static-nodes.json for ENs when there's no PN
+  replace:
+    path: "{{ homi_root }}/output/static-nodes-en.json"
+    regexp: "@{{ hostvars[item]['ansible_host'] }}"
+    replace: "@{{ hostvars[item]['privateIP'] }}"
+  loop: "{{ groups['CypressCN'] }}"
+  when:
+    - not remoteNode|bool
+    - groups["CypressCN"] is defined and (groups["CypressCN"]|length>0)
+    - groups["CypressPN"] is defined and (groups["CypressPN"]|length==0)
+    - groups["CypressEN"] is defined and (groups["CypressEN"]|length>0)
+
+- name: Klaytn kgen tool - Modify static-nodes.json for SPNs when there's no SPN
+  replace:
+    path: "{{ homi_root }}/output/static-nodes-sen.json"
+    regexp: "@{{ hostvars[item]['ansible_host'] }}"
+    replace: "@{{ hostvars[item]['privateIP'] }}"
+  loop: "{{ groups['ServiceChainCN'] }}"
+  when:
+    - not remoteNode|bool
+    - groups["ServiceChainCN"] is defined and (groups["ServiceChainCN"]|length>0)
+    - groups["ServiceChainPN"] is defined and (groups["ServiceChainPN"]|length==0)
+    - groups["ServiceChainEN"] is defined and (groups["ServiceChainEN"]|length>0)
