@@ -1,7 +1,7 @@
 galaxy_info:
   author:
     - sawyer.lee@krustuniverse.com
-  description: "Klaytn BlockChain Bridge Configuration"
+  description: "Klaytn BlockChain Grafana Configuration"
   company: Krust Universe
   license: MIT
   min_ansible_version: 2.4
