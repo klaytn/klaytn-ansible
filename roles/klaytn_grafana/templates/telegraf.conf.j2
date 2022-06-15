@@ -16,5 +16,5 @@
 [[outputs.influxdb]]
   urls = [{% for host in groups['Grafana'] %}"http://{{ hostvars[host].ansible_all_ipv4_addresses | ipaddr('10.0.0.0/8') | first }}:{{ hostvars[host]['influxdb_port'] }}"{{ "," if not loop.last else "" }}{% endfor %}]
   username = "user"
-  password = "userpass"
+  password = "{{ hostvars[groups['Grafana'][0]].userpass }}"
   database = "klaytn_logs"

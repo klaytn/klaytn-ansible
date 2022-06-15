@@ -16,8 +16,8 @@ datasources:
   access: 'proxy'
   database: 'klaytn_logs'
   user: 'user'
-  url: 'http://localhost:8086'
+  url: 'http://localhost:{{ influxdb_port }}'
   jsonData:
     httpMode: 'GET'
   secureJsonData:
-    password: 'userpass'
+    password: '{{ userpass }}'

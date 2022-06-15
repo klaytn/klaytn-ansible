@@ -7,6 +7,11 @@
     ["{{ grafana_conf_dir }}/provisioning/datasources", "{{ grafana_conf_dir }}/provisioning/dashboards", "{{ influxdb_data_dir }}"]
   become: yes
 
+- name: "Generate random strings for InfluxDB password"
+  set_fact:
+    adminpass: "{{ lookup('password', '/dev/null length=12 chars=ascii_letters') }}"
+    userpass: "{{ lookup('password', '/dev/null length=12 chars=ascii_letters') }}"
+
 - name: "Grafana Configuration with templates"
   template:
     src: "{{ item.src }}"
@@ -70,13 +75,14 @@
     name: influxdb
     image: influxdb:1.8
     volumes:
-      - /var/lib/influxdb:/var/lib/influxdb
+      - "{{ influxdb_data_dir }}:/var/lib/influxdb"
     env:
       INFLUXDB_DB: klaytn_logs
       INFLUXDB_ADMIN_USER: admin
-      INFLUXDB_ADMIN_PASSWROD: adminpass
+      INFLUXDB_ADMIN_PASSWORD: "{{ adminpass }}"
       INFLUXDB_USER: user
-      INFLUXDB_USER_PASSWORD: userpass
+      INFLUXDB_USER_PASSWORD: "{{ userpass }}"
+      INFLUXDB_HTTP_BIND_ADDRESS: ":{{ influxdb_port }}"
     network_mode: host
     restart_policy: always
     state: started
