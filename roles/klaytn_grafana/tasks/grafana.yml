@@ -1,25 +1,27 @@
 # description: Setup grafana
-- name: "Make configuration directory"
+- name: "Make data and configuration directory"
   file:
     path: "{{ item }}"
     state: "directory"
   with_items:
-    ["{{ grafana_conf_dir }}/provisioning/datasources", "{{ grafana_conf_dir }}/provisioning/dashboards"]
+    ["{{ grafana_conf_dir }}/provisioning/datasources", "{{ grafana_conf_dir }}/provisioning/dashboards", "{{ influxdb_data_dir }}"]
   become: yes
 
 - name: "Grafana Configuration with templates"
   template:
-    src: "prometheus.yml.j2"
-    dest: "{{ grafana_conf_dir }}/prometheus.yml"
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
     force: yes
   become: yes
+  with_items:
+    - { src: "templates/prometheus.yml.j2", dest: "{{ grafana_conf_dir }}/prometheus.yml" }
+    - { src: "templates/klaytn.yml.j2", dest: "{{ grafana_conf_dir }}/provisioning/datasources/klaytn.yml" }
 
 - name: "Copy static files"
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items:
-    - { src: "templates/klaytn.yml", dest: "{{ grafana_conf_dir }}/provisioning/datasources/klaytn.yml" }
     - { src: "templates/klaytn-dashboard.yml", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/klaytn-dashboard.yml" }
     - { src: "templates/grafana_klaytn.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn.json" }
     - { src: "templates/grafana_klaytn_data.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_data.json" }
@@ -27,6 +29,7 @@
     - { src: "templates/grafana_klaytn_miner.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_minor.json" }
     - { src: "templates/grafana_klaytn_network.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_network.json" }
     - { src: "templates/grafana_klaytn_service_chain.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_service_chain.json" }
+    - { src: "templates/grafana_klaytn_log.json", dest: "{{ grafana_conf_dir }}/provisioning/dashboards/grafana_klaytn_log.json" }
   become: yes
 
 - name: "Install docker"
@@ -56,6 +59,24 @@
     image: prom/prometheus
     volumes:
       - /etc/grafana/conf/prometheus.yml:/etc/prometheus/prometheus.yml
+    network_mode: host
+    restart_policy: always
+    state: started
+    detach: yes
+  become: yes
+
+- name: "Run influxdb docker"
+  docker_container:
+    name: influxdb
+    image: influxdb:1.8
+    volumes:
+      - /var/lib/influxdb:/var/lib/influxdb
+    env:
+      INFLUXDB_DB: klaytn_logs
+      INFLUXDB_ADMIN_USER: admin
+      INFLUXDB_ADMIN_PASSWROD: adminpass
+      INFLUXDB_USER: user
+      INFLUXDB_USER_PASSWORD: userpass
     network_mode: host
     restart_policy: always
     state: started

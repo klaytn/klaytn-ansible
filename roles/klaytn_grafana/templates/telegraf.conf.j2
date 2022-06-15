@@ -1,0 +1,20 @@
+[global_tags]
+  nodetype = "{{ klaytn_service_type | regex_replace('[k,d]') }}"
+
+  instance = "{{ inventory_hostname }}"
+
+[agent]
+  hostname = "{{ inventory_hostname }}"
+
+[[inputs.tail]]
+  files = ["{{ klaytn_log_dir }}/{{ klaytn_service_type }}.out"]
+  from_beginning = false
+  name_override = "klaytn_log"
+  data_format = "grok"
+  grok_patterns = ["%{GREEDYDATA:value:string}"]
+
+[[outputs.influxdb]]
+  urls = [{% for host in groups['Grafana'] %}"http://{{ hostvars[host].ansible_all_ipv4_addresses | ipaddr('10.0.0.0/8') | first }}:{{ hostvars[host]['influxdb_port'] }}"{{ "," if not loop.last else "" }}{% endfor %}]
+  username = "user"
+  password = "userpass"
+  database = "klaytn_logs"

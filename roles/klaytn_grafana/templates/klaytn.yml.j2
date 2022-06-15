@@ -1,12 +1,23 @@
 # provisioning/datasources/all.yml
 # https://github.com/cirocosta/sample-grafana/blob/master/grafana/provisioning/datasources/all.yml
+apiVersion: 1
 
 datasources:
 -  access: 'proxy'                       # make grafana perform the requests
    editable: true                        # whether it should be editable
    is_default: true                      # whether this should be the default DS
-   name: 'klaytn'                         # name of the datasource
+   name: 'klaytn'                        # name of the datasource
    org_id: 1                             # id of the organization to tie this datasource to
    type: 'prometheus'                    # type of the data source
-   url: 'http://localhost:9090'         # url of the prom instance
+   url: 'http://localhost:9090'          # url of the prom instance
    version: 1                            # well, versioning
+- name: 'klaytn_logs'
+  type: 'influxdb'
+  access: 'proxy'
+  database: 'klaytn_logs'
+  user: 'user'
+  url: 'http://localhost:8086'
+  jsonData:
+    httpMode: 'GET'
+  secureJsonData:
+    password: 'userpass'

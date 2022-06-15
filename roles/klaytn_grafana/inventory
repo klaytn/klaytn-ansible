@@ -1,2 +1,6 @@
 [Grafana]
-GRAFANA0 ansible_host=1.2.3.4 ansible_user=MY_USER klaytn_node_list=["1.2.3.4", "5.6.7.8"]
+GRAFANA0 ansible_host=1.2.3.4 ansible_user=MY_USER
+
+[KlaytnNode]
+EN0 ansible_host=5.6.7.8 ansible_user=EN_USER
+SCN0 ansible_host=6.7.8.9 ansible_user=SCN_USER

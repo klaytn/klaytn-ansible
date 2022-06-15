@@ -1,0 +1,61 @@
+---
+# RedHat & CentOS specific installation
+- name: "Add yum repository for InfluxDB"
+  yum_repository:
+    name: influxdb
+    description: InfluxDB Repository
+    baseurl: https://repos.influxdata.com/rhel/7/x86_64/stable
+    gpgcheck: no
+  become: yes
+  when: ansible_facts['pkg_mgr'] == 'yum'
+
+- name: "Install Telegraf with yum"
+  yum:
+    name: 'telegraf'
+    state: latest
+  register: is_telegraf_installed
+  until: is_telegraf_installed is succeeded
+  become: yes
+  when: ansible_facts['pkg_mgr'] == 'yum'
+
+# Ubuntu & Debian specific installation
+- name: "Add apt repository for InfluxDB"
+  shell: |
+    wget -qO- https://repos.influxdata.com/influxdb.key | sudo tee /etc/apt/trusted.gpg.d/influxdb.asc >/dev/null
+    source /etc/os-release
+    echo "deb https://repos.influxdata.com/${ID} ${VERSION_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
+  become: yes
+  when: ansible_facts['pkg_mgr'] != 'yum'
+
+# TODO: This is a temporary measure for cases when AMI already have existing telegraf config, and should be removed after that issue is resolved.
+- name: "Remove remaining telegraf directory if exist"
+  file:
+    path: "/etc/telegraf/telegraf.d"
+    state: absent
+  become: yes
+
+- name: "Install Telegraf with apt"
+  apt:
+    name: telegraf
+    update_cache: yes
+    state: latest
+  become: yes
+  when: ansible_facts['pkg_mgr'] != 'yum'
+
+- name: "Make Telegraf directory if not exists"
+  file:
+    path: "{{ telegraf_conf_dir }}"
+    state: "directory"
+  become: yes
+
+- name: "Telegraf Configuration with template"
+  template:
+    src: "telegraf.conf.j2"
+    dest: "{{ telegraf_conf_dir }}/telegraf.conf"
+    force: yes
+  become: yes
+
+- name: "Restart Telegraf daemon"
+  command: /bin/true
+  notify:
+    - restart telegraf daemon

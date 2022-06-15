@@ -6,6 +6,6 @@ scrape_configs:
   - job_name: 'klaytn'
     static_configs:
     - targets:
-{% for host in klaytn_node_list %}
-      - "{{ host }}:{{ prometheus_port }}"
+{% for host in groups['KlaytnNode'] %}
+      - "{{ hostvars[host]['ansible_host'] }}:{{ prometheus_port }}"
 {% endfor %}

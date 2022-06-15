@@ -2,4 +2,7 @@
 # defaults file for klaytn_grafana
 prometheus_port: "61001"
 grafana_port: "3000"
-klaytn_node_list: []
+influxdb_port: "8086"
+
+telegraf_conf_dir: "/etc/telegraf"
+influxdb_data_dir: "/var/lib/influxdb"
