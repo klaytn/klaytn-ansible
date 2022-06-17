@@ -6,6 +6,8 @@ This ansible role enables you to automate grafana configuration for Klaytn.
 Requirements
 ------------
 
+`python3-netaddr` package is required. (`sudo apt install --no-install-recommends python3-netaddr` in debian)
+
 An existing Klaytn network and the node for deploying grafana.
 See [klaytn-terraform](https://github.com/klaytn/klaytn-terraform)
 if you have not prepared an existing Klaytn network.
