@@ -27,7 +27,7 @@ First, update inventory.
 
 ```
 [ServiceChainCN]
-SCN1 ansible_user=MY_USER ansible_host=1.2.3.4
+SCN1 ansible_user=MY_USER ansible_host=1.2.3.4 ansible_ssh_private_key_file=/home/myuser/.ssh/mykey.pem
 
 [controller]
 builder ansible_host=localhost ansible_connecion=local ansible_user=YOUR_USER
