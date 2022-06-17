@@ -41,7 +41,7 @@
 - name: Modify main bridges json file
   replace:
     path: "{{ klaytn_node_DATA_DIR }}/main-bridges.json"
-    regexp: "@0.0.0.0:0"
+    regexp: "\\@\\[::\\]:32323"
     replace: "@{{ hostvars[inventory_hostname | regex_replace('CHILD', 'PARENT')]['privateIP'] }}:{{ parent_bridge_port }}"
   become: yes
   when:
