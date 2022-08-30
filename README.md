@@ -87,3 +87,14 @@ $ ./test_roles.sh node
 $ ./test_roles.sh bridge
 $ ./test_roles.sh grafana
 ```
+
+**NOTE** If you are not using SSH-agent, you might need to provide Ansible with SSH keys
+to access remote hotst. You can either use `--key-file` option in the command line,
+or use `ansible_ssh_private_key_file` in the inventory file.
+
+```
+# In command line
+$ ansible-playbook -i roles/klaytn_node/inventory service_chain_SCN_setup.yml --key-file /path/to/your/ssh-key
+# In inventory file
+SCN1 ansible_user=MY_USER ansible_host=1.2.3.4 ansible_ssh_private_key_file=/path/to/your/ssh-key
+```
