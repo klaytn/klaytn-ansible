@@ -22,7 +22,7 @@ klaytn_package_state: present
 
 ## NOTE Update to latest version
 klaytn_homi:
-    version: v1.7.3
+    version: v1.9.0
 
 # defaults for Klaytn Package  -- use klaytn configuration file - https://docs.klaytn_com/node/endpoint-node/operation-guide/configuration#properties
 # Network name that this node will join.  This value is used when NETWORK_ID is not defined.  ("cypress", "baobab")

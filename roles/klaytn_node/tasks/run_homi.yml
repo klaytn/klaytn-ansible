@@ -14,6 +14,15 @@
     dest: "{{ homi_root }}/klaytn-homi-tool.tar.gz"
   when:
     - not remoteNode|bool
+    - ansible_system == "Linux"
+
+- name: Klaytn Homi Tool - Download Package
+  get_url:
+    url: "http://packages.klaytn.net/klaytn/{{ klaytn_homi.version }}/homi-{{klaytn_homi.version }}-0-darwin-10.10-amd64.tar.gz"
+    dest: "{{ homi_root }}/klaytn-homi-tool.tar.gz"
+  when:
+    - not remoteNode|bool
+    - ansible_os_family == "Darwin"
 
 - name: Klaytn Homi Tool - Unarchive Package
   unarchive:
