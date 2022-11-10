@@ -1,3 +1,7 @@
+# Branch name will be changed
+
+We will change the `master` branch to `main` at Nov 1, 2022.
+After change branch policy, please check your local or forked repository settings.
 
 # Ansible : klaytn_ansible collection
 
