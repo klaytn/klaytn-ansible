@@ -1,11 +1,47 @@
 ---
-# tasks file for klaytn_bridge
+# tasks file for klaytn_grafana
+- name: "kcnd - define Klaytn service"
+  set_fact:
+    klaytn_service_type: kcnd
+  when: inventory_hostname.find('CN') != -1
+
+- name: "kpnd - define Klaytn service"
+  set_fact:
+    klaytn_service_type : kpnd
+  when: inventory_hostname.find('PN') != -1
+
+- name: "kend - define Klaytn service"
+  set_fact:
+    klaytn_service_type : kend
+  when: inventory_hostname.find('EN') != -1
+
+- name: "kscnd - define Klaytn service"
+  set_fact:
+    klaytn_service_type: kscnd
+  when: inventory_hostname.find('SCN') != -1
+
+- name: "kspnd - define Klaytn service"
+  set_fact:
+    klaytn_service_type : kspnd
+  when: inventory_hostname.find('SPN') != -1
+
+- name: "ksend - define Klaytn service"
+  set_fact:
+    klaytn_service_type : ksend
+  when: inventory_hostname.find('SEN') != -1
+
 - name: "grafana"
   set_fact:
     isGrafana: "yes"
     prometheus_port: "{{ prometheus_port }}"
     grafana_port: "{{ grafana_port }}"
+    influxdb_port: "{{ influxdb_port }}"
   when: inventory_hostname.find('GRAFANA') != -1
+
+- name: "Klaytn nodes"
+  set_fact:
+    isGrafana: "no"
+  when: inventory_hostname.find('GRAFANA') == -1
 
 - name: "Set Ansible values"
   set_fact:
@@ -13,7 +49,19 @@
   when:
     - isGrafana|bool
 
+- name: "Set Ansible values"
+  set_fact:
+    telegraf_conf_dir: "/etc/telegraf"
+    klaytn_log_dir: "/var/{{ klaytn_service_type }}/log"
+  when:
+    - not isGrafana|bool
+
 - name: "Install and configure grafana"
-  include_tasks: "setup_grafana.yml"
+  include_tasks: "grafana.yml"
   when:
     - isGrafana|bool
+
+- name: "Install and configure telegraf"
+  include_tasks: "telegraf.yml"
+  when:
+    - not isGrafana|bool

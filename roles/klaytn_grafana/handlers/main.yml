@@ -5,3 +5,10 @@
     state: restarted
     enabled: yes
   become: yes
+
+- name: restart telegraf daemon
+  systemd:
+    name: "telegraf"
+    state: restarted
+    enabled: yes
+  become: yes

@@ -20,6 +20,9 @@ See all default variables in [defaults/main.yml](defaults/main.yml)
 - `prometheus_port`: the port number of the prometheus metrics server in the Klaytn nodes (61001).
 Grafana uses this port to collect metrics from the running Klaytn nodes
 - `grafana_port`: the port number of the grafana web UI
+- `influxdb_port`: the port number of the InfluxDB server (8086)
+- `telegraf_conf_dir`: the path for the Telegraf configuration file
+- `influxdb_data_dir`: the path for the InfluxDB data directory mounted to InfluxDB container
 
 Dependencies
 ------------
